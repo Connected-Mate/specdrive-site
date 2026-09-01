@@ -194,6 +194,122 @@
   .quiet .cell, .quiet .detail { box-shadow: 0 0 0 5px var(--canvas), 0 0 0 6px var(--hairline); background: var(--paper); }
   .quiet .cell:hover { box-shadow: 0 0 0 5px var(--canvas), 0 0 0 6px var(--hairline), 0 10px 26px rgba(0, 0, 0, 0.07); }
 
+  /* ---------- skill vs MCP compare ---------- */
+  .compare { margin-top: 40px; display: grid; grid-template-columns: 1fr 1.15fr; gap: 14px; }
+  @media (max-width: 680px) { .compare { grid-template-columns: 1fr; } }
+  .compare-col { border-radius: 22px; padding: 22px 24px; }
+  .compare-col.old { background: rgba(0, 0, 0, 0.035); box-shadow: 0 0 0 1px var(--hairline); }
+  .compare-col.old .compare-head { color: var(--smoke); }
+  .compare-col.new { background: var(--paper); box-shadow: 0 0 0 1px rgba(0, 122, 255, 0.28), 0 10px 30px rgba(0, 122, 255, 0.07); }
+  .compare-head { font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 12px; }
+  .compare-col ul { list-style: none; display: grid; gap: 9px; }
+  .compare-col li { font-size: 13px; line-height: 1.55; padding-left: 20px; position: relative; color: var(--graphite); }
+  .compare-col.old li { color: var(--smoke); }
+  .compare-col.old li::before { content: '–'; position: absolute; left: 5px; color: var(--smoke); }
+  .compare-col.new li::before { content: '✓'; position: absolute; left: 0; color: var(--blue); font-weight: 600; }
+  .compare-col.new li b { color: var(--ink); }
+
+  /* ---------- the machine: agents → MCP → forced to-do ---------- */
+  .machine { margin-top: 20px; }
+  .machine-inner {
+    background: var(--paper); border-radius: 22px; box-shadow: 0 0 0 1px var(--hairline);
+    padding: 28px 24px; display: flex; align-items: center; justify-content: center; flex-wrap: nowrap;
+  }
+  .m-agents { display: grid; gap: 6px; flex: none; }
+  .m-chip {
+    font-size: 11px; font-weight: 600; border-radius: 50px; padding: 4px 11px;
+    background: rgba(0, 0, 0, 0.045); color: var(--graphite); text-align: center;
+    animation: chipGlow 10s infinite; animation-delay: calc(var(--i) * 0.4s);
+  }
+  @keyframes chipGlow {
+    0%, 6%, 16%, 100% { background: rgba(0, 0, 0, 0.045); color: var(--graphite); }
+    10% { background: rgba(0, 122, 255, 0.14); color: var(--blue); }
+  }
+  .m-link { width: 52px; height: 2px; background: var(--hairline); position: relative; margin: 0 6px; flex: none; }
+  .m-pulse {
+    position: absolute; top: -2.5px; left: -4px; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--blue); opacity: 0; animation: travel 10s infinite;
+  }
+  .m-pulse.p2 { animation-delay: 5s; }
+  .m-pulse.p3 { animation-delay: 2.2s; }
+  @keyframes travel {
+    0% { left: -4px; opacity: 0; }
+    3% { opacity: 1; }
+    15% { left: calc(100% - 3px); opacity: 1; }
+    18%, 100% { left: calc(100% - 3px); opacity: 0; }
+  }
+  .m-core {
+    text-align: center; border-radius: 18px; padding: 14px 20px; background: var(--dusk); color: #fff;
+    flex: none; box-shadow: 0 8px 24px rgba(80, 80, 180, 0.25);
+  }
+  .m-core-title { font-family: var(--serif); font-size: 19px; line-height: 1; }
+  .m-core-sub { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.85; margin-top: 3px; }
+  .m-list { display: grid; gap: 7px; min-width: 230px; flex: none; }
+  .m-task { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--graphite); }
+  .m-box {
+    width: 15px; height: 15px; border-radius: 5px; flex: none; position: relative;
+    box-shadow: inset 0 0 0 1.5px rgba(0, 0, 0, 0.2);
+  }
+  .m-box::after {
+    content: '✓'; position: absolute; inset: 0; display: grid; place-items: center;
+    font-size: 10px; font-weight: 700; color: #fff; background: var(--blue); border-radius: 5px;
+    opacity: 0; transform: scale(0.4);
+  }
+  .t1 .m-box::after { animation: check 10s infinite; }
+  .t2 .m-box::after { animation: check 10s infinite 1.6s; }
+  .t3 .m-box::after { animation: check 10s infinite 6.4s; }
+  .t4 .m-box::after { animation: check 10s infinite 7.8s; }
+  @keyframes check {
+    0%, 3% { opacity: 0; transform: scale(0.4); }
+    6% { opacity: 1; transform: scale(1.1); }
+    8%, 90% { opacity: 1; transform: scale(1); }
+    95%, 100% { opacity: 0; transform: scale(0.4); }
+  }
+  .m-proof {
+    font-size: 10px; font-weight: 600; color: var(--blue); background: rgba(0, 122, 255, 0.08);
+    padding: 2px 7px; border-radius: 50px; opacity: 0.5; animation: proof 10s infinite;
+  }
+  @keyframes proof {
+    0%, 52% { opacity: 0.5; transform: none; }
+    56%, 62% { opacity: 1; transform: scale(1.07); }
+    66%, 100% { opacity: 0.5; transform: none; }
+  }
+  .m-done {
+    display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600;
+    color: var(--smoke); padding-top: 8px; border-top: 1px dashed var(--hairline); margin-top: 2px;
+    animation: doneok 10s infinite;
+  }
+  @keyframes doneok {
+    0%, 88% { color: var(--smoke); }
+    91%, 97% { color: var(--blue); }
+    100% { color: var(--smoke); }
+  }
+  .m-blocked {
+    font-size: 10.5px; font-weight: 600; color: #b3402f; background: rgba(179, 64, 47, 0.09);
+    border-radius: 50px; padding: 2px 8px; opacity: 0; animation: blocked 10s infinite;
+  }
+  @keyframes blocked {
+    0%, 33% { opacity: 0; transform: none; }
+    35% { opacity: 1; transform: translateX(-2px); }
+    37% { transform: translateX(2px); }
+    39% { transform: translateX(-1px); }
+    41% { transform: none; }
+    52% { opacity: 1; }
+    58%, 100% { opacity: 0; }
+  }
+  .machine figcaption { margin-top: 12px; font-size: 12px; color: var(--smoke); text-align: center; }
+  @media (max-width: 680px) {
+    .machine-inner { flex-direction: column; gap: 4px; }
+    .m-agents { grid-template-columns: 1fr 1fr; width: 100%; }
+    .m-link { width: 2px; height: 28px; margin: 6px 0; }
+    .m-pulse { display: none; }
+    .m-list { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .machine *, .machine *::after { animation: none !important; }
+    .t1 .m-box::after, .t2 .m-box::after { opacity: 1; transform: none; }
+  }
+
   /* ---------- download ---------- */
   .download { text-align: center; }
   .download .lede { margin: 0 auto 36px; }
@@ -228,7 +344,7 @@
       ↓&nbsp; Download for Mac
     </a>
   </div>
-  <div class="hint">Apple Silicon · free</div>
+  <div class="hint">Any MCP-capable agent · Any team · Apple Silicon · free</div>
 </header>
 
 <div class="shot-wrap">
@@ -239,6 +355,64 @@
 </div>
 
 <section>
+  <div class="wrap">
+    <div class="label reveal">Why an MCP, not a skill</div>
+    <h2 class="reveal">Prompts get forgotten.<br />Tools can’t be.</h2>
+    <p class="lede reveal">
+      Most “spec-driven” setups are skill files — big prompts pasted into the agent’s head.
+      They work on day one. Then the context fills up, the rules fade, and the agent wanders off.
+      SpecDrive takes the opposite bet: the discipline lives in the <em>tools</em>, where no amount
+      of context can erode it.
+    </p>
+    <div class="compare">
+      <div class="compare-col old reveal">
+        <div class="compare-head">A spec skill / prompt file</div>
+        <ul>
+          <li>Lives in the agent’s context — and dies there. The longer the session, the less it weighs.</li>
+          <li>Nothing enforces it. Skipping a step is one token away, and you’ll never know.</li>
+          <li>Every rule you add makes the context heavier — and a heavy context is exactly what makes agents drift.</li>
+        </ul>
+      </div>
+      <div class="compare-col new reveal" style="--d:0.08s">
+        <div class="compare-head">SpecDrive — an MCP the agent can’t ignore</div>
+        <ul>
+          <li>The rules are in the tools, not in memory. A move that isn’t allowed doesn’t get argued with — it <b>fails</b>.</li>
+          <li>The to-do list is forced: next step only exists once the previous one is <b>proven</b> done.</li>
+          <li>Near-zero context cost: the board keeps the memory; the agent only ever receives its next step.</li>
+          <li>Any agent, any company, same discipline — the workflow travels with the board, not with the model.</li>
+        </ul>
+      </div>
+    </div>
+
+    <figure class="machine reveal" aria-label="Animated diagram: any agent connects to the SpecDrive MCP, which forces an ordered to-do list; a skip attempt is blocked until proof is given">
+      <div class="machine-inner">
+        <div class="m-agents">
+          <span class="m-chip" style="--i:0">Claude Code</span>
+          <span class="m-chip" style="--i:1">Cursor</span>
+          <span class="m-chip" style="--i:2">Windsurf</span>
+          <span class="m-chip" style="--i:3">Gemini</span>
+          <span class="m-chip" style="--i:4">Codex</span>
+        </div>
+        <div class="m-link" aria-hidden="true"><span class="m-pulse"></span><span class="m-pulse p2"></span></div>
+        <div class="m-core">
+          <div class="m-core-title">specdrive</div>
+          <div class="m-core-sub">MCP server</div>
+        </div>
+        <div class="m-link" aria-hidden="true"><span class="m-pulse p3"></span></div>
+        <div class="m-list">
+          <div class="m-task t1"><span class="m-box"></span> Write the specs</div>
+          <div class="m-task t2"><span class="m-box"></span> Walk the scenarios</div>
+          <div class="m-task t3"><span class="m-box"></span> Build step 3 <span class="m-proof">proof required</span></div>
+          <div class="m-task t4"><span class="m-box"></span> Independent review</div>
+          <div class="m-done">Done <span class="m-blocked">✕ blocked — prove it first</span></div>
+        </div>
+      </div>
+      <figcaption>The agent asks for its next step; the server hands out exactly one — and “done” without proof bounces.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="quiet">
   <div class="wrap">
     <div class="label reveal">How it works</div>
     <h2 class="reveal">You talk. The board fills itself.</h2>
@@ -257,7 +431,7 @@
   </div>
 </section>
 
-<section class="quiet">
+<section>
   <div class="wrap">
     <div class="label reveal">A look inside</div>
     <h2 class="reveal">Real pixels, real project.</h2>
@@ -282,7 +456,7 @@
   </div>
 </section>
 
-<section>
+<section class="quiet">
   <div class="wrap">
     <div class="label reveal">Why it’s different</div>
     <h2 class="reveal">An agent that can’t cut corners.</h2>
@@ -301,7 +475,7 @@
   </div>
 </section>
 
-<section class="download quiet">
+<section class="download">
   <div class="wrap">
     <div class="label reveal">Get it</div>
     <h2 class="reveal">Download SpecDrive</h2>
