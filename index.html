@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SpecDrive — your idea, built for real</title>
+<meta name="description" content="SpecDrive turns a spoken idea into a rigorously built product. Your AI coding agent does the work; a live spec board keeps it honest — specs, scenarios, proof-gated steps, independent review." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #000;
+    --graphite: #3e3e3e;
+    --smoke: #636363;
+    --canvas: #f7f7f7;
+    --paper: #fff;
+    --blue: #007aff;
+    --hairline: rgba(0, 0, 0, 0.08);
+    --dusk: linear-gradient(180deg, #4a7ff2 0%, #7b7ed8 30%, #c98ab5 65%, #e8a87c 100%);
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--sans);
+    font-size: 15px;
+    letter-spacing: -0.02em;
+    color: var(--graphite);
+    background: var(--canvas);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    background: var(--dusk);
+    color: #fff;
+    text-align: center;
+    padding: 96px 24px 200px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero .brand {
+    font-family: var(--serif);
+    font-size: 22px;
+    letter-spacing: 0;
+    opacity: 0.95;
+    margin-bottom: 64px;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(44px, 8vw, 76px);
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    max-width: 700px;
+    margin: 0 auto 24px;
+  }
+  .hero h1 em { font-style: italic; }
+  .hero .sub {
+    font-size: 17px;
+    max-width: 520px;
+    margin: 0 auto 40px;
+    opacity: 0.92;
+    line-height: 1.55;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 50px;
+    padding: 14px 28px;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    transition: transform 0.18s cubic-bezier(0.34, 1.3, 0.64, 1), opacity 0.18s ease;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-white {
+    background: #fff;
+    color: var(--ink);
+    box-shadow: inset 0 1px 0 0 #fff, 0 0 0 1px rgba(0, 0, 0, 0.15), 0 3px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+  .btn-white:hover { opacity: 0.92; }
+  .btn-blue {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.15), 0 3px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+  .btn-blue:hover { opacity: 0.92; }
+  .hero .hint { margin-top: 14px; font-size: 12.5px; opacity: 0.8; }
+
+  /* ---------- floating board mock ---------- */
+  .board-mock {
+    max-width: 640px;
+    margin: -140px auto 0;
+    background: var(--paper);
+    border-radius: 26px;
+    box-shadow: 0 0 0 5px var(--canvas), 0 0 0 6px var(--hairline), 0 24px 60px rgba(30, 30, 60, 0.18);
+    padding: 22px 24px 26px;
+    position: relative;
+    z-index: 2;
+    text-align: left;
+  }
+  .board-mock .bar {
+    display: flex; gap: 6px; margin-bottom: 18px;
+  }
+  .board-mock .bar i { width: 10px; height: 10px; border-radius: 50%; background: #e3e3e3; }
+  .board-mock h4 {
+    font-family: var(--serif); font-weight: 400; font-size: 20px; color: var(--ink); margin-bottom: 12px;
+  }
+  .mock-card {
+    background: var(--paper);
+    border-radius: 16px;
+    box-shadow: 0 0 0 1px var(--hairline);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .mock-card b { display: block; font-size: 13px; color: var(--ink); font-weight: 600; margin-bottom: 3px; }
+  .mock-card span { font-size: 12px; color: var(--smoke); }
+  .tag {
+    display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+    border-radius: 50px; padding: 3px 9px; margin-top: 8px;
+    background: rgba(0, 122, 255, 0.09); color: var(--blue);
+  }
+  .tag.ok { background: rgba(52, 168, 83, 0.1); color: #1e7e34; }
+  .mock-live {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11.5px; color: var(--smoke); margin-top: 14px;
+  }
+  .mock-live .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--blue);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* ---------- sections ---------- */
+  section { padding: 88px 0; }
+  .label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--smoke); margin-bottom: 14px;
+  }
+  h2 {
+    font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 5vw, 42px);
+    line-height: 1.05; color: var(--ink); margin-bottom: 18px; letter-spacing: -0.01em;
+  }
+  .lede { font-size: 16px; max-width: 560px; }
+
+  .steps { margin-top: 44px; display: grid; gap: 14px; }
+  .step {
+    background: var(--paper); border-radius: 22px; box-shadow: 0 0 0 1px var(--hairline);
+    padding: 22px 24px; display: flex; gap: 18px; align-items: flex-start;
+  }
+  .step .no {
+    font-family: var(--serif); font-size: 26px; color: var(--blue); line-height: 1; flex: none; width: 28px;
+  }
+  .step b { display: block; color: var(--ink); font-weight: 600; margin-bottom: 4px; font-size: 14.5px; }
+  .step p { font-size: 13.5px; color: var(--smoke); }
+
+  .grid { margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } }
+  .cell {
+    background: var(--paper); border-radius: 22px; box-shadow: 0 0 0 1px var(--hairline);
+    padding: 22px 24px;
+  }
+  .cell b { display: block; color: var(--ink); font-weight: 600; margin-bottom: 6px; font-size: 14.5px; }
+  .cell p { font-size: 13px; color: var(--smoke); }
+
+  .quiet { background: var(--paper); }
+
+  /* ---------- download ---------- */
+  .download { text-align: center; }
+  .download h2 { margin-bottom: 12px; }
+  .download .lede { margin: 0 auto 36px; }
+  .dl-note {
+    max-width: 480px; margin: 22px auto 0;
+    font-size: 12.5px; color: var(--smoke);
+    background: var(--canvas); border-radius: 16px; padding: 14px 18px;
+    text-align: left; line-height: 1.55;
+  }
+  .dl-note b { color: var(--graphite); }
+  .dl-meta { margin-top: 12px; font-size: 12px; color: var(--smoke); }
+
+  footer {
+    text-align: center; padding: 48px 24px 64px; font-size: 12.5px; color: var(--smoke);
+  }
+  footer .fbrand { font-family: var(--serif); font-size: 18px; color: var(--ink); margin-bottom: 8px; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="brand">SpecDrive</div>
+  <h1>Say what you want.<br /><em>Watch it get built right.</em></h1>
+  <p class="sub">
+    SpecDrive is a Mac app for people who build software by talking to an AI coding agent —
+    and want it done properly, not just quickly. Your agent does the work; a live board keeps it honest.
+  </p>
+  <a class="btn btn-white" href="https://github.com/Connected-Mate/specdrive-site/releases/latest/download/SpecDrive-0.1.0-arm64.dmg">
+    ↓&nbsp; Download for Mac
+  </a>
+  <div class="hint">Apple Silicon · free</div>
+</header>
+
+<div class="board-mock" aria-hidden="true">
+  <div class="bar"><i></i><i></i><i></i></div>
+  <h4>Neighborhood Bakery App</h4>
+  <div class="mock-card">
+    <b>Reserve the last loaf</b>
+    <span>When a neighbor taps Reserve, the count goes down for everyone, instantly.</span>
+    <div class="tag ok">Stress-tested</div>
+  </div>
+  <div class="mock-card">
+    <b>Step 7 — Checkout flow</b>
+    <span>How we checked — ran the full purchase, payment declined path included. All green.</span>
+    <div class="tag">Verified with proof</div>
+  </div>
+  <div class="mock-live"><span class="dot"></span> Claude Code is on it — writing spec 12…</div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="label">How it works</div>
+    <h2>You talk. The board fills itself.</h2>
+    <p class="lede">
+      No forms, no jargon, nothing to write. Connect the AI agent you already use
+      (Claude Code, Cursor, Windsurf, Gemini, Codex…) and describe what you want in your own words.
+    </p>
+    <div class="steps">
+      <div class="step"><div class="no">1</div><div><b>Tell your idea — or point at your existing app</b>
+        <p>Blank page or a real codebase with users and history: both work. On an existing app, the agent studies the actual code first and plans changes that don’t break what already works.</p></div></div>
+      <div class="step"><div class="no">2</div><div><b>The board captures everything, live</b>
+        <p>Specs, usage scenarios, sketches of every screen, the plan, the risks — appearing on your screen as you speak. It’s your project’s memory, in plain words.</p></div></div>
+      <div class="step"><div class="no">3</div><div><b>The build runs step by step, under rules</b>
+        <p>Ordered steps with dependencies, each one verified before it turns green. You watch real progress — and you can leave a note on any card; your agent reads it on its next pass.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="quiet">
+  <div class="wrap">
+    <div class="label">Why it’s different</div>
+    <h2>An agent that can’t cut corners.</h2>
+    <p class="lede">
+      SpecDrive doesn’t suggest good practice — it enforces it. The workflow is locked
+      at the tool level, so “trust me, it works” is never enough.
+    </p>
+    <div class="grid">
+      <div class="cell"><b>Proof, not promises</b><p>A step can’t be marked done without evidence: what was run, what appeared on screen. It’s shown to you under every finished step.</p></div>
+      <div class="cell"><b>Independent review, enforced</b><p>A project can’t close until a fresh session — one that didn’t write the code — has reviewed it. And yesterday’s review never covers today’s changes.</p></div>
+      <div class="cell"><b>Security is not optional</b><p>Every plan must end with tests and a security &amp; privacy pass. Skipping anything requires a written reason that lands on your board, visibly.</p></div>
+      <div class="cell"><b>It notices drift</b><p>If the code changes while nobody’s watching the board, you get a warning before anything is trusted again.</p></div>
+      <div class="cell"><b>House rules above projects</b><p>Company charter, compliance, “always in French”, “data stays in the EU” — set standing rules once per folder; every project inside follows them, in every phase.</p></div>
+      <div class="cell"><b>The board talks back</b><p>Click any card, leave a note in your own words. Your agent treats it as top priority and reports back what it did about it.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="download">
+  <div class="wrap">
+    <div class="label">Get it</div>
+    <h2>Download SpecDrive</h2>
+    <p class="lede">Free, for Apple Silicon Macs. Works with any MCP-capable AI agent — one click connects the ones we detect, one copy-paste connects any other.</p>
+    <a class="btn btn-blue" href="https://github.com/Connected-Mate/specdrive-site/releases/latest/download/SpecDrive-0.1.0-arm64.dmg">
+      ↓&nbsp; Download SpecDrive for Mac
+    </a>
+    <div class="dl-meta">Version 0.1.0 · macOS 13+ · Apple Silicon</div>
+    <div class="dl-note">
+      <b>First launch:</b> SpecDrive isn’t notarized by Apple yet, so macOS will warn you.
+      Right-click the app → <b>Open</b> → <b>Open</b> once; after that it opens normally.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fbrand">SpecDrive</div>
+  Built for people who’d rather describe software than write it.<br />
+  <a href="https://github.com/Connected-Mate/specdrive-site/releases">All releases</a>
+</footer>
+
+</body>
+</html>
