@@ -90,13 +90,10 @@
 
   /* ---------- hero ---------- */
   .hero {
-    background: var(--dusk);
-    background-size: 100% 128%;
-    background-position: 0% 12%;
+    background: #fdfdfd;
     color: #fff;
     text-align: center;
-    padding: 92px 24px 230px;
-    animation: duskDrift 34s ease-in-out infinite alternate;
+    padding: 92px 24px 300px;
     position: relative;
     overflow: hidden;
   }
@@ -105,52 +102,56 @@
     from { background-position: 0% 4%; }
     to   { background-position: 0% 96%; }
   }
-  /* The dusk gradient gives way under the cursor. Three layers, no light overlay:
-     the base drifts on its own, a cross-angled twin slides the opposite way for
-     parallax, and a soft lens carries the palette displaced one notch further down
-     the ramp — so where the pointer passes, the colours step aside. */
+  /* The gradient PARTS under the cursor: two halves of the same dusk sheet,
+     split at the pointer's x, sliding away from it — a soft white seam opens
+     between them, like curtains. No light overlay, only the gradient moving. */
   .warp {
     position: absolute;
-    inset: -16%;
+    inset: 0;
     z-index: 0;
     pointer-events: none;
-    will-change: transform;
-  }
-  .warp-a {
     background: var(--dusk);
     background-size: 100% 128%;
     background-position: 0% 12%;
     animation: duskDrift 34s ease-in-out infinite alternate;
+    will-change: transform, clip-path;
   }
-  .warp-b {
-    background: linear-gradient(148deg, #4a7ff2 0%, #7b7ed8 30%, #c98ab5 64%, #e8a87c 100%);
-    background-size: 190% 200%;
-    opacity: 0.5;
-    animation: duskDriftB 47s ease-in-out infinite alternate;
+  .warp-l { clip-path: inset(0 calc(100% - var(--sx, 50%)) 0 0); transform: translateX(calc(var(--part, 0px) * -1)); }
+  .warp-r { clip-path: inset(0 0 0 var(--sx, 50%)); transform: translateX(var(--part, 0px)); }
+  /* Soft edge on each half so the seam is a feathered white breath, not a blade */
+  .warp-l { -webkit-mask-image: linear-gradient(to right, #000 calc(var(--sx, 50%) - 14px), rgba(0,0,0,0.55) calc(var(--sx, 50%) - 4px), transparent calc(var(--sx, 50%) - 1px)); mask-image: linear-gradient(to right, #000 calc(var(--sx, 50%) - 14px), rgba(0,0,0,0.55) calc(var(--sx, 50%) - 4px), transparent calc(var(--sx, 50%) - 1px)); }
+  .warp-r { -webkit-mask-image: linear-gradient(to left, #000 calc(100% - var(--sx, 50%) - 14px), rgba(0,0,0,0.55) calc(100% - var(--sx, 50%) - 4px), transparent calc(100% - var(--sx, 50%) - 1px)); mask-image: linear-gradient(to left, #000 calc(100% - var(--sx, 50%) - 14px), rgba(0,0,0,0.55) calc(100% - var(--sx, 50%) - 4px), transparent calc(100% - var(--sx, 50%) - 1px)); }
+  /* Masks only bite while parted — at rest both halves overlap seamlessly */
+  .hero:not(.warping) .warp-l, .hero:not(.warping) .warp-r {
+    -webkit-mask-image: none; mask-image: none;
+    clip-path: inset(0 0 0 0);
   }
-  @keyframes duskDriftB {
-    from { background-position: 88% 6%; }
-    to   { background-position: 12% 94%; }
-  }
-  .warp-lens {
-    inset: 0;
-    background: linear-gradient(178deg, #7b7ed8 -12%, #a887c6 24%, #c98ab5 52%, #e8a87c 84%, #f2c39d 108%);
-    background-size: 100% 150%;
-    background-position: 0% 55%;
-    opacity: 0;
-    transition: opacity 0.75s ease;
-    -webkit-mask-image: radial-gradient(circle 460px at var(--mx, 50%) var(--my, 40%),
-      #000 0%, rgba(0, 0, 0, 0.66) 38%, rgba(0, 0, 0, 0.22) 62%, transparent 78%);
-    mask-image: radial-gradient(circle 460px at var(--mx, 50%) var(--my, 40%),
-      #000 0%, rgba(0, 0, 0, 0.66) 38%, rgba(0, 0, 0, 0.22) 62%, transparent 78%);
-    will-change: opacity, background-position;
-  }
-  .hero.warping .warp-lens { opacity: 0.82; }
-  .hero .brand {
+  .hero .brand { margin-bottom: 60px; }
+  .brand-stamp {
+    position: relative;
+    display: inline-block;
     font-family: var(--serif);
-    font-size: 22px;
-    opacity: 0.95;
-    margin-bottom: 60px;
+    font-size: 23px;
+    color: var(--ink);
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 8px 20px 10px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 6px 18px rgba(30, 30, 70, 0.18);
+    transform: rotate(-1.6deg);
+  }
+  .brand-cursor { position: absolute; right: -12px; bottom: -7px; }
+  .brand-pill {
+    position: absolute;
+    left: 10px;
+    top: 7px;
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    background: #7b7ed8;
+    border-radius: 50px;
+    padding: 2px 8px;
+    white-space: nowrap;
   }
   .hero h1 {
     font-family: var(--serif);
@@ -208,16 +209,20 @@
   .hero .hint { margin-top: 14px; font-size: 12.5px; opacity: 0.8; }
 
   /* ---------- real app screenshot, floating out of the hero ---------- */
-  .shot-wrap { max-width: 880px; margin: -170px auto 0; padding: 0 20px; position: relative; z-index: 2; }
-  .shot-frame {
-    /* The screenshot carries its own dark rounded frame — show it untouched,
-       only a soft cast shadow underneath. A box-shadow (not a drop-shadow filter)
-       so the cast is never clipped by this element's own overflow or by the
-       stacking context of the section below. */
+  /* The white sheet slides up over the gradient with generous rounded corners —
+     no hard horizontal cut anywhere. */
+  .sheet {
     position: relative;
-    border-radius: 26px;
-    overflow: hidden;
-    box-shadow: 0 26px 54px -14px rgba(30, 30, 70, 0.42), 0 8px 20px -8px rgba(30, 30, 70, 0.28);
+    z-index: 2;
+    margin-top: -96px;
+    background: var(--canvas);
+    border-radius: 40px 40px 0 0;
+    box-shadow: 0 -18px 50px rgba(30, 30, 70, 0.12);
+  }
+  .shot-wrap { max-width: 880px; margin: 0 auto; padding: 56px 20px 0; position: relative; }
+  .shot-frame {
+    /* The screenshot carries its own dark rounded frame — nothing added. */
+    filter: drop-shadow(0 24px 48px rgba(30, 30, 70, 0.28));
   }
   .shot-frame img { display: block; width: 100%; height: auto; }
   .shot-caption {
@@ -755,10 +760,16 @@
 <body>
 
 <header class="hero">
-  <div class="warp warp-a" aria-hidden="true"></div>
-  <div class="warp warp-b" aria-hidden="true"></div>
-  <div class="warp warp-lens" aria-hidden="true"></div>
-  <div class="brand">SpecDrive</div>
+  <div class="warp warp-l" aria-hidden="true"></div>
+  <div class="warp warp-r" aria-hidden="true"></div>
+  <div class="brand">
+    <span class="brand-stamp">SpecDrive
+      <span class="brand-cursor" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L5.94 2.47a.5.5 0 0 0-.44.74Z" fill="#7b7ed8" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <span class="brand-pill">agents</span>
+      </span>
+    </span>
+  </div>
   <h1>Say what you want.<br /><em>Watch it get built right.</em></h1>
   <p class="sub">
     SpecDrive is a Mac app for people who build software by talking to an AI coding agent —
@@ -772,9 +783,10 @@
   <div class="hint">Any MCP-capable agent · Any team · Apple Silicon · free</div>
 </header>
 
+<div class="sheet">
 <div class="shot-wrap">
   <div class="shot-frame">
-    <img src="assets/hero.png" alt="The SpecDrive board: specs written live by an AI agent, a challenge verdict, the phase stepper and the next-step prompt" width="2784" height="1944" />
+    <img src="assets/hero.png" alt="The SpecDrive board: specs written live by an AI agent, a challenge verdict, the phase stepper and the next-step prompt" width="2562" height="1722" />
   </div>
   <div class="shot-caption"><span class="live-dot"></span> A real project, filled live by Claude Code — nothing in this screenshot was typed by a human.</div>
 </div>
@@ -1084,51 +1096,42 @@
   <a href="https://github.com/Connected-Mate/specdrive-site/releases">All releases</a>
 </footer>
 
+</div><!-- /sheet -->
+
 <script>
   (function () {
-    // The dusk gradient gives way under the cursor: the near layer is pushed away from
-    // the pointer, the far layer drifts the other way, so the colour bands part.
-    // Values are eased every frame, so the motion trails the pointer and settles back
-    // to the idle drift when it leaves. Pointer devices only.
     var hero = document.querySelector('.hero');
-    var a = hero && hero.querySelector('.warp-a');
-    var b = hero && hero.querySelector('.warp-b');
-    var lens = hero && hero.querySelector('.warp-lens');
-    if (!a || !b || !lens ||
+    if (!hero || !hero.querySelector('.warp-l') ||
         !window.matchMedia('(pointer: fine)').matches ||
         window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    // Targets and eased values are in -1..1, centre of the hero being 0.
-    var tx = 0, ty = 0, cx = 0, cy = 0, running = false, inside = false;
-
+    // Curtain: the two gradient halves split at the pointer's x and slide
+    // apart a few px — a feathered white seam opens where the mouse passes.
+    var sx = 50, part = 0, tsx = 50, tpart = 0, running = false;
     function frame() {
-      cx += (tx - cx) * 0.075;
-      cy += (ty - cy) * 0.075;
-      a.style.transform = 'translate3d(' + (cx * -5).toFixed(3) + '%,' + (cy * -4).toFixed(3) + '%,0)';
-      b.style.transform = 'translate3d(' + (cx * 10).toFixed(3) + '%,' + (cy * 8).toFixed(3) + '%,0)';
-      lens.style.setProperty('--mx', (50 + cx * 50).toFixed(2) + '%');
-      lens.style.setProperty('--my', (50 + cy * 50).toFixed(2) + '%');
-      // The displaced palette slides against the pointer: the colours step aside.
-      lens.style.backgroundPosition = (50 - cx * 32).toFixed(2) + '% ' + (52 - cy * 36).toFixed(2) + '%';
-      if (Math.abs(tx - cx) > 0.0006 || Math.abs(ty - cy) > 0.0006) {
+      sx += (tsx - sx) * 0.14;
+      part += (tpart - part) * 0.1;
+      hero.style.setProperty('--sx', sx.toFixed(2) + '%');
+      hero.style.setProperty('--part', part.toFixed(2) + 'px');
+      if (Math.abs(tsx - sx) > 0.05 || Math.abs(tpart - part) > 0.05) {
         requestAnimationFrame(frame);
       } else {
         running = false;
+        if (tpart === 0) hero.classList.remove('warping');
       }
     }
     function start() { if (!running) { running = true; requestAnimationFrame(frame); } }
 
     hero.addEventListener('pointermove', function (e) {
       var r = hero.getBoundingClientRect();
-      tx = (e.clientX - r.left) / r.width * 2 - 1;
-      ty = (e.clientY - r.top) / r.height * 2 - 1;
-      if (!inside) { inside = true; hero.classList.add('warping'); }
+      tsx = ((e.clientX - r.left) / r.width) * 100;
+      tpart = 6;
+      hero.classList.add('warping');
       start();
     }, { passive: true });
     hero.addEventListener('pointerleave', function () {
-      inside = false;
-      hero.classList.remove('warping');
-      tx = 0; ty = 0; start();
+      tpart = 0;
+      start();
     });
   })();
 
