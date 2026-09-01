@@ -58,9 +58,33 @@
   .shot-frame    { animation: rise-scale 1s var(--spring) both 0.55s; }
   .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s var(--spring); transition-delay: var(--d, 0s); }
   .reveal.in { opacity: 1; transform: none; }
+  /* Section titles are written in rather than faded in. A mask, not a clip-path:
+     clip-path would empty the element's intersection rect and the observer that
+     triggers the reveal would never fire. */
+  .reveal.title {
+    transform: translateY(14px);
+    -webkit-mask-image: linear-gradient(to bottom, #000, #000);
+    mask-image: linear-gradient(to bottom, #000, #000);
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+    -webkit-mask-position: 0 0; mask-position: 0 0;
+    -webkit-mask-size: 100% 0%; mask-size: 100% 0%;
+    transition: opacity 0.5s ease, transform 0.95s var(--spring),
+                -webkit-mask-size 1.05s var(--spring), mask-size 1.05s var(--spring);
+    transition-delay: var(--d, 0s);
+  }
+  .reveal.title.in {
+    transform: none;
+    -webkit-mask-size: 100% 150%; mask-size: 100% 150%;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 4px; }
+  .hero :focus-visible { outline-color: #fff; }
   @media (prefers-reduced-motion: reduce) {
     .hero .brand, .hero h1, .hero .sub, .hero .cta, .hero .hint, .shot-frame { animation: none; }
     .reveal { opacity: 1; transform: none; transition: none; }
+    .reveal.title { -webkit-mask-image: none; mask-image: none; transform: none; }
     .live-dot { animation: none; }
   }
 
@@ -76,27 +100,52 @@
     position: relative;
     overflow: hidden;
   }
-  /* A soft light halo that follows the cursor across the dusk gradient. */
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(
-      420px circle at var(--mx, 50%) var(--my, 30%),
-      rgba(255, 255, 255, 0.16),
-      rgba(255, 236, 210, 0.07) 45%,
-      transparent 70%
-    );
-    opacity: 0;
-    transition: opacity 0.6s ease;
-  }
-  .hero.lit::before { opacity: 1; }
-  .hero > * { position: relative; z-index: 1; }
+  .hero > *:not(.warp) { position: relative; z-index: 1; }
   @keyframes duskDrift {
     from { background-position: 0% 4%; }
     to   { background-position: 0% 96%; }
   }
+  /* The dusk gradient gives way under the cursor. Three layers, no light overlay:
+     the base drifts on its own, a cross-angled twin slides the opposite way for
+     parallax, and a soft lens carries the palette displaced one notch further down
+     the ramp — so where the pointer passes, the colours step aside. */
+  .warp {
+    position: absolute;
+    inset: -16%;
+    z-index: 0;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .warp-a {
+    background: var(--dusk);
+    background-size: 100% 128%;
+    background-position: 0% 12%;
+    animation: duskDrift 34s ease-in-out infinite alternate;
+  }
+  .warp-b {
+    background: linear-gradient(148deg, #4a7ff2 0%, #7b7ed8 30%, #c98ab5 64%, #e8a87c 100%);
+    background-size: 190% 200%;
+    opacity: 0.5;
+    animation: duskDriftB 47s ease-in-out infinite alternate;
+  }
+  @keyframes duskDriftB {
+    from { background-position: 88% 6%; }
+    to   { background-position: 12% 94%; }
+  }
+  .warp-lens {
+    inset: 0;
+    background: linear-gradient(178deg, #7b7ed8 -12%, #a887c6 24%, #c98ab5 52%, #e8a87c 84%, #f2c39d 108%);
+    background-size: 100% 150%;
+    background-position: 0% 55%;
+    opacity: 0;
+    transition: opacity 0.75s ease;
+    -webkit-mask-image: radial-gradient(circle 460px at var(--mx, 50%) var(--my, 40%),
+      #000 0%, rgba(0, 0, 0, 0.66) 38%, rgba(0, 0, 0, 0.22) 62%, transparent 78%);
+    mask-image: radial-gradient(circle 460px at var(--mx, 50%) var(--my, 40%),
+      #000 0%, rgba(0, 0, 0, 0.66) 38%, rgba(0, 0, 0, 0.22) 62%, transparent 78%);
+    will-change: opacity, background-position;
+  }
+  .hero.warping .warp-lens { opacity: 0.82; }
   .hero .brand {
     font-family: var(--serif);
     font-size: 22px;
@@ -162,10 +211,13 @@
   .shot-wrap { max-width: 880px; margin: -170px auto 0; padding: 0 20px; position: relative; z-index: 2; }
   .shot-frame {
     /* The screenshot carries its own dark rounded frame — show it untouched,
-       only a soft cast shadow underneath. */
+       only a soft cast shadow underneath. A box-shadow (not a drop-shadow filter)
+       so the cast is never clipped by this element's own overflow or by the
+       stacking context of the section below. */
+    position: relative;
     border-radius: 26px;
     overflow: hidden;
-    filter: drop-shadow(0 30px 60px rgba(30, 30, 70, 0.35));
+    box-shadow: 0 26px 54px -14px rgba(30, 30, 70, 0.42), 0 8px 20px -8px rgba(30, 30, 70, 0.28);
   }
   .shot-frame img { display: block; width: 100%; height: auto; }
   .shot-caption {
@@ -199,7 +251,9 @@
   .step:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px var(--hairline), 0 10px 26px rgba(0, 0, 0, 0.07); }
   .step .no {
     font-family: var(--serif); font-size: 26px; color: var(--blue); line-height: 1; flex: none; width: 28px;
+    transition: transform 0.35s var(--spring);
   }
+  .step:hover .no { transform: translateY(-2px) scale(1.12); }
   .step b { display: block; color: var(--ink); font-weight: 600; margin-bottom: 4px; font-size: 14.5px; }
   .step p { font-size: 13.5px; color: var(--smoke); }
 
@@ -213,7 +267,16 @@
   }
   .detail:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px var(--hairline), 0 12px 30px rgba(0, 0, 0, 0.08); }
   .detail.wide { grid-column: 1 / -1; }
-  .crop { display: block; width: 100%; height: auto; border-bottom: 1px solid var(--hairline); }
+  .crop {
+    display: block; width: 100%; height: auto; border-bottom: 1px solid var(--hairline);
+    transform-origin: 50% 0;
+    transition: transform 0.6s var(--spring);
+  }
+  .detail:hover .crop { transform: scale(1.022); }
+  .details .detail:nth-child(2) { --d: 0.07s; }
+  .details .detail:nth-child(3) { --d: 0.14s; }
+  .steps .step:nth-child(2) { --d: 0.08s; }
+  .steps .step:nth-child(3) { --d: 0.16s; }
   .crop-pad { padding: 14px 16px 0; }
   .detail figcaption { padding: 16px 20px; }
   .detail figcaption b { display: block; font-size: 13.5px; color: var(--ink); font-weight: 600; margin-bottom: 3px; }
@@ -242,7 +305,16 @@
   /* ---------- skill vs MCP compare ---------- */
   .compare { margin-top: 40px; display: grid; grid-template-columns: 1fr 1.15fr; gap: 14px; }
   @media (max-width: 680px) { .compare { grid-template-columns: 1fr; } }
-  .compare-col { border-radius: 22px; padding: 22px 24px; }
+  .compare-col {
+    border-radius: 22px; padding: 22px 24px;
+    transition: transform 0.3s var(--spring), box-shadow 0.3s ease;
+  }
+  .compare-col.new:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px rgba(0, 122, 255, 0.34), 0 16px 38px rgba(0, 122, 255, 0.12);
+  }
+  .compare-col li { transition: color 0.25s ease; }
+  .compare-col.old:hover li { color: var(--graphite); }
   .compare-col.old { background: rgba(0, 0, 0, 0.035); box-shadow: 0 0 0 1px var(--hairline); }
   .compare-col.old .compare-head { color: var(--smoke); }
   .compare-col.new { background: var(--paper); box-shadow: 0 0 0 1px rgba(0, 122, 255, 0.28), 0 10px 30px rgba(0, 122, 255, 0.07); }
@@ -265,6 +337,11 @@
     font-size: 11px; font-weight: 600; border-radius: 50px; padding: 4px 11px;
     background: rgba(0, 0, 0, 0.045); color: var(--graphite); text-align: center;
     animation: chipGlow 10s ease-in-out infinite; animation-delay: calc(var(--i) * 0.4s);
+    transition: transform 0.3s var(--spring), box-shadow 0.3s ease;
+  }
+  .m-chip:hover, .r-rule:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 1px rgba(0, 122, 255, 0.3), 0 4px 12px rgba(0, 122, 255, 0.1);
   }
   @keyframes chipGlow {
     0%, 6%, 16%, 100% { background: rgba(0, 0, 0, 0.045); color: var(--graphite); }
@@ -504,6 +581,7 @@
     font-size: 11.5px; font-weight: 600; border-radius: 50px; padding: 5px 12px;
     background: rgba(0, 0, 0, 0.045); color: var(--graphite);
     animation: ruleGlow 9s ease-in-out infinite; animation-delay: calc(var(--i) * 1.6s);
+    transition: transform 0.3s var(--spring), box-shadow 0.3s ease;
   }
   @keyframes ruleGlow {
     0%, 5%    { background: rgba(0, 0, 0, 0.045); color: var(--graphite); }
@@ -565,7 +643,7 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .hero { animation: none; }
-    .hero::before { display: none; }
+    .warp { display: none; }
     .loop *, .rules * { animation: none !important; }
     .s-chip, .r-stamp { opacity: 1; transform: none; }
     .station { background: rgba(0, 0, 0, 0.028); }
@@ -630,11 +708,56 @@
   footer .fsep { opacity: 0.4; margin: 0 7px; }
   a { color: var(--blue); text-decoration: none; }
   a:hover { text-decoration: underline; }
+
+  /* ---------- diagram cards: a whisper of depth on hover ---------- */
+  .machine-inner, .loop-inner, .rules-inner, .resume-inner {
+    transition: box-shadow 0.4s ease, transform 0.4s var(--spring);
+  }
+  .machine-inner:hover, .loop-inner:hover {
+    box-shadow: 0 0 0 1px var(--hairline), 0 14px 34px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+  }
+  .quiet .rules-inner:hover, .resume-inner:hover {
+    box-shadow: 0 0 0 5px var(--canvas), 0 0 0 6px var(--hairline), 0 14px 34px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+  }
+
+  /* ---------- open source invitation ---------- */
+  .oss { padding-top: 0; }
+  .oss-inner {
+    background: var(--paper); border-radius: 22px; box-shadow: 0 0 0 1px var(--hairline);
+    padding: 26px 28px 28px;
+    /* Always stacked, so the star pill can appear later without moving anything above it. */
+    display: flex; flex-direction: column; align-items: flex-start; gap: 18px;
+  }
+  .oss-text b { display: block; font-family: var(--serif); font-weight: 400; font-size: 26px; color: var(--ink); line-height: 1.15; margin-bottom: 6px; }
+  .oss-text p { font-size: 13.5px; color: var(--smoke); max-width: 540px; }
+  .oss-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .oss-actions .btn { padding: 12px 22px; font-size: 14px; }
+  .gh-stars {
+    display: none; align-items: center; gap: 6px;
+    border-radius: 50px; padding: 7px 14px;
+    font-size: 12.5px; font-weight: 600; color: var(--graphite);
+    background: var(--canvas); box-shadow: 0 0 0 1px var(--hairline);
+    text-decoration: none; white-space: nowrap;
+    transition: transform 0.25s var(--spring), box-shadow 0.25s ease;
+  }
+  .gh-stars.on { display: inline-flex; animation: rise 0.6s var(--spring) both; }
+  .gh-stars:hover { text-decoration: none; transform: translateY(-1px); box-shadow: 0 0 0 1px rgba(0, 122, 255, 0.3); }
+  .gh-stars .star { color: var(--blue); font-size: 13px; line-height: 1; }
+  @media (prefers-reduced-motion: reduce) { .gh-stars.on { animation: none; } }
+  @media (max-width: 620px) {
+    .oss-inner { padding: 22px 22px 24px; }
+    .oss-text p { max-width: none; }
+  }
 </style>
 </head>
 <body>
 
 <header class="hero">
+  <div class="warp warp-a" aria-hidden="true"></div>
+  <div class="warp warp-b" aria-hidden="true"></div>
+  <div class="warp warp-lens" aria-hidden="true"></div>
   <div class="brand">SpecDrive</div>
   <h1>Say what you want.<br /><em>Watch it get built right.</em></h1>
   <p class="sub">
@@ -659,7 +782,7 @@
 <section>
   <div class="wrap">
     <div class="label reveal">Why an MCP, not a skill</div>
-    <h2 class="reveal">Prompts get forgotten.<br />Tools can’t be.</h2>
+    <h2 class="reveal title">Prompts get forgotten.<br />Tools can’t be.</h2>
     <p class="lede reveal">
       Most “spec-driven” setups are skill files — big prompts pasted into the agent’s head.
       They work on day one. Then the context fills up, the rules fade, and the agent wanders off.
@@ -717,7 +840,7 @@
 <section class="quiet">
   <div class="wrap">
     <div class="label reveal">How it works</div>
-    <h2 class="reveal">You talk. The board fills itself.</h2>
+    <h2 class="reveal title">You talk. The board fills itself.</h2>
     <p class="lede reveal">
       No forms, no jargon, nothing to write. Connect the AI agent you already use
       (Claude Code, Cursor, Windsurf, Gemini, Codex…) and describe what you want in your own words.
@@ -736,7 +859,7 @@
 <section>
   <div class="wrap">
     <div class="label reveal">The build loop</div>
-    <h2 class="reveal">Then it builds.</h2>
+    <h2 class="reveal title">Then it builds.</h2>
     <p class="lede reveal">
       The spec is finished — the enforcement isn’t. The same server now hands out the work:
       one task at a time, in dependency order, each one carrying the exact specs and choices it has
@@ -795,7 +918,7 @@
 <section class="quiet">
   <div class="wrap">
     <div class="label reveal">Loop engineering</div>
-    <h2 class="reveal">It can build without you.</h2>
+    <h2 class="reveal title">It can build without you.</h2>
     <p class="lede reveal">
       Launch the autonomous run and walk away: the agent takes the next step, proves it,
       checks it off, takes the next one. And here is the part that changes everything —
@@ -834,7 +957,7 @@
 <section>
   <div class="wrap">
     <div class="label reveal">A look inside</div>
-    <h2 class="reveal">Real pixels, real project.</h2>
+    <h2 class="reveal title">Real pixels, real project.</h2>
     <p class="lede reveal">Three moments from the screenshot above — the kind of thing the board does for you all day.</p>
     <div class="details">
       <figure class="detail wide reveal">
@@ -859,7 +982,7 @@
 <section>
   <div class="wrap">
     <div class="label reveal">Why it’s different</div>
-    <h2 class="reveal">An agent that can’t cut corners.</h2>
+    <h2 class="reveal title">An agent that can’t cut corners.</h2>
     <p class="lede reveal">
       SpecDrive doesn’t suggest good practice — it enforces it. The workflow is locked
       at the tool level, so “trust me, it works” is never enough.
@@ -878,7 +1001,7 @@
 <section class="quiet">
   <div class="wrap">
     <div class="label reveal">House rules</div>
-    <h2 class="reveal">Rules that are already there.</h2>
+    <h2 class="reveal title">Rules that are already there.</h2>
     <p class="lede reveal">
       Your company’s non-negotiables shouldn’t be re-explained at the start of every project.
       Put them on a folder once — security, design, structure, or anything else you care about,
@@ -924,13 +1047,31 @@
 <section class="download">
   <div class="wrap">
     <div class="label reveal">Get it</div>
-    <h2 class="reveal">Download SpecDrive</h2>
+    <h2 class="reveal title">Download SpecDrive</h2>
     <p class="lede reveal">Free, for Apple Silicon Macs. Works with any MCP-capable AI agent — one click connects the ones we detect, one copy-paste connects any other.</p>
     <div class="reveal">
       <a class="btn btn-blue" href="https://github.com/Connected-Mate/specdrive-site/releases/latest/download/SpecDrive-0.1.0-arm64.dmg">
         ↓&nbsp; Download SpecDrive for Mac
       </a>
       <div class="dl-meta">Version 0.1.0 · macOS 13+ · Apple Silicon</div>
+    </div>
+  </div>
+</section>
+
+<section class="oss">
+  <div class="wrap">
+    <div class="oss-inner reveal">
+      <div class="oss-text">
+        <b>Built in the open.</b>
+        <p>The board, the server, the rules — all of it is on GitHub. Read the code,
+        open an issue, or send us a change. We’d rather build this with you than for you.</p>
+      </div>
+      <div class="oss-actions">
+        <a class="btn btn-white" href="https://github.com/Connected-Mate/specdrive">View the code</a>
+        <a class="gh-stars" id="gh-stars" href="https://github.com/Connected-Mate/specdrive/stargazers">
+          <span class="star" aria-hidden="true">★</span><span id="gh-stars-n"></span>
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -945,23 +1086,67 @@
 
 <script>
   (function () {
-    // Cursor halo on the hero gradient — pointer devices only, rAF-throttled.
+    // The dusk gradient gives way under the cursor: the near layer is pushed away from
+    // the pointer, the far layer drifts the other way, so the colour bands part.
+    // Values are eased every frame, so the motion trails the pointer and settles back
+    // to the idle drift when it leaves. Pointer devices only.
     var hero = document.querySelector('.hero');
-    if (hero && window.matchMedia('(pointer: fine)').matches &&
-        !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      var raf = null;
-      hero.addEventListener('pointermove', function (e) {
-        if (raf) return;
-        raf = requestAnimationFrame(function () {
-          raf = null;
-          var r = hero.getBoundingClientRect();
-          hero.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(2) + '%');
-          hero.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100).toFixed(2) + '%');
-          hero.classList.add('lit');
-        });
-      });
-      hero.addEventListener('pointerleave', function () { hero.classList.remove('lit'); });
+    var a = hero && hero.querySelector('.warp-a');
+    var b = hero && hero.querySelector('.warp-b');
+    var lens = hero && hero.querySelector('.warp-lens');
+    if (!a || !b || !lens ||
+        !window.matchMedia('(pointer: fine)').matches ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // Targets and eased values are in -1..1, centre of the hero being 0.
+    var tx = 0, ty = 0, cx = 0, cy = 0, running = false, inside = false;
+
+    function frame() {
+      cx += (tx - cx) * 0.075;
+      cy += (ty - cy) * 0.075;
+      a.style.transform = 'translate3d(' + (cx * -5).toFixed(3) + '%,' + (cy * -4).toFixed(3) + '%,0)';
+      b.style.transform = 'translate3d(' + (cx * 10).toFixed(3) + '%,' + (cy * 8).toFixed(3) + '%,0)';
+      lens.style.setProperty('--mx', (50 + cx * 50).toFixed(2) + '%');
+      lens.style.setProperty('--my', (50 + cy * 50).toFixed(2) + '%');
+      // The displaced palette slides against the pointer: the colours step aside.
+      lens.style.backgroundPosition = (50 - cx * 32).toFixed(2) + '% ' + (52 - cy * 36).toFixed(2) + '%';
+      if (Math.abs(tx - cx) > 0.0006 || Math.abs(ty - cy) > 0.0006) {
+        requestAnimationFrame(frame);
+      } else {
+        running = false;
+      }
     }
+    function start() { if (!running) { running = true; requestAnimationFrame(frame); } }
+
+    hero.addEventListener('pointermove', function (e) {
+      var r = hero.getBoundingClientRect();
+      tx = (e.clientX - r.left) / r.width * 2 - 1;
+      ty = (e.clientY - r.top) / r.height * 2 - 1;
+      if (!inside) { inside = true; hero.classList.add('warping'); }
+      start();
+    }, { passive: true });
+    hero.addEventListener('pointerleave', function () {
+      inside = false;
+      hero.classList.remove('warping');
+      tx = 0; ty = 0; start();
+    });
+  })();
+
+  (function () {
+    // Show the GitHub star count only once it is worth showing.
+    var pill = document.getElementById('gh-stars');
+    var n = document.getElementById('gh-stars-n');
+    if (!pill || !n) return;
+    fetch('https://api.github.com/repos/Connected-Mate/specdrive', {
+      headers: { Accept: 'application/vnd.github+json' }
+    })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || typeof d.stargazers_count !== 'number' || d.stargazers_count <= 10) return;
+        n.textContent = d.stargazers_count.toLocaleString() + ' on GitHub';
+        pill.classList.add('on');
+      })
+      .catch(function () { /* no badge, no noise */ });
   })();
   (function () {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
