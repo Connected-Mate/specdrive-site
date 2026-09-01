@@ -57,9 +57,16 @@
   /* ---------- hero ---------- */
   .hero {
     background: var(--dusk);
+    background-size: 100% 128%;
+    background-position: 0% 12%;
     color: #fff;
     text-align: center;
     padding: 92px 24px 230px;
+    animation: duskDrift 34s ease-in-out infinite alternate;
+  }
+  @keyframes duskDrift {
+    from { background-position: 0% 4%; }
+    to   { background-position: 0% 96%; }
   }
   .hero .brand {
     font-family: var(--serif);
@@ -85,6 +92,8 @@
     line-height: 1.55;
   }
   .btn {
+    position: relative;
+    overflow: hidden;
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -95,6 +104,16 @@
     text-decoration: none;
     transition: transform 0.18s cubic-bezier(0.34, 1.3, 0.64, 1), opacity 0.18s ease;
   }
+  .btn::after {
+    content: '';
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background: linear-gradient(100deg, transparent 34%, rgba(255, 255, 255, 0.5) 50%, transparent 66%);
+    transform: translateX(-125%);
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .btn-white::after { background: linear-gradient(100deg, transparent 34%, rgba(0, 0, 0, 0.07) 50%, transparent 66%); }
+  .btn:hover::after { transform: translateX(125%); }
   .btn:active { transform: scale(0.97); }
   .btn:hover { transform: translateY(-1px); }
   .btn-white {
@@ -121,7 +140,11 @@
       0 2px 6px rgba(20, 20, 50, 0.08),
       0 30px 80px rgba(30, 30, 70, 0.28);
   }
-  .shot-frame img { display: block; width: 100%; height: auto; }
+  .shot-frame img {
+    display: block; width: 100%; height: auto;
+    transform: scale(1.03); transform-origin: 50% 50%;
+    will-change: transform;
+  }
   .shot-caption {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     margin-top: 16px; font-size: 12.5px; color: var(--smoke); text-align: center;
@@ -187,6 +210,11 @@
     transition: transform 0.25s var(--spring), box-shadow 0.25s ease;
   }
   .cell:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px var(--hairline), 0 10px 26px rgba(0, 0, 0, 0.07); }
+  .grid .cell:nth-child(2) { --d: 0.07s; }
+  .grid .cell:nth-child(3) { --d: 0.14s; }
+  .grid .cell:nth-child(4) { --d: 0.21s; }
+  .grid .cell:nth-child(5) { --d: 0.26s; }
+  .grid .cell:nth-child(6) { --d: 0.31s; }
   .cell b { display: block; color: var(--ink); font-weight: 600; margin-bottom: 6px; font-size: 14.5px; }
   .cell p { font-size: 13px; color: var(--smoke); }
 
@@ -219,7 +247,7 @@
   .m-chip {
     font-size: 11px; font-weight: 600; border-radius: 50px; padding: 4px 11px;
     background: rgba(0, 0, 0, 0.045); color: var(--graphite); text-align: center;
-    animation: chipGlow 10s infinite; animation-delay: calc(var(--i) * 0.4s);
+    animation: chipGlow 10s ease-in-out infinite; animation-delay: calc(var(--i) * 0.4s);
   }
   @keyframes chipGlow {
     0%, 6%, 16%, 100% { background: rgba(0, 0, 0, 0.045); color: var(--graphite); }
@@ -228,7 +256,8 @@
   .m-link { width: 52px; height: 2px; background: var(--hairline); position: relative; margin: 0 6px; flex: none; }
   .m-pulse {
     position: absolute; top: -2.5px; left: -4px; width: 7px; height: 7px; border-radius: 50%;
-    background: var(--blue); opacity: 0; animation: travel 10s infinite;
+    background: var(--blue); opacity: 0;
+    animation: travel 10s cubic-bezier(0.5, 0, 0.3, 1) infinite;
   }
   .m-pulse.p2 { animation-delay: 5s; }
   .m-pulse.p3 { animation-delay: 2.2s; }
@@ -255,10 +284,10 @@
     font-size: 10px; font-weight: 700; color: #fff; background: var(--blue); border-radius: 5px;
     opacity: 0; transform: scale(0.4);
   }
-  .t1 .m-box::after { animation: check 10s infinite; }
-  .t2 .m-box::after { animation: check 10s infinite 1.6s; }
-  .t3 .m-box::after { animation: check 10s infinite 6.4s; }
-  .t4 .m-box::after { animation: check 10s infinite 7.8s; }
+  .t1 .m-box::after { animation: check 10s cubic-bezier(0.34, 1.4, 0.64, 1) infinite; }
+  .t2 .m-box::after { animation: check 10s cubic-bezier(0.34, 1.4, 0.64, 1) infinite 1.6s; }
+  .t3 .m-box::after { animation: check 10s cubic-bezier(0.34, 1.4, 0.64, 1) infinite 6.4s; }
+  .t4 .m-box::after { animation: check 10s cubic-bezier(0.34, 1.4, 0.64, 1) infinite 7.8s; }
   @keyframes check {
     0%, 3% { opacity: 0; transform: scale(0.4); }
     6% { opacity: 1; transform: scale(1.1); }
@@ -310,6 +339,222 @@
     .t1 .m-box::after, .t2 .m-box::after { opacity: 1; transform: none; }
   }
 
+  /* ---------- the build loop: get_next_task → build → prove → verified ---------- */
+  .loop { margin-top: 40px; }
+  .loop-inner {
+    background: var(--paper); border-radius: 22px; box-shadow: 0 0 0 1px var(--hairline);
+    padding: 30px 22px 24px;
+  }
+  .loop-track { display: flex; align-items: stretch; justify-content: center; }
+  .station {
+    flex: 1 1 0; min-width: 0; text-align: center;
+    border-radius: 16px; padding: 14px 9px 13px;
+    background: rgba(0, 0, 0, 0.028);
+    box-shadow: 0 0 0 1px rgba(0, 122, 255, 0);
+    animation: stationOn 12s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  .station.s2 { animation-delay: 3s; }
+  .station.s3 { animation-delay: 6s; }
+  .station.s4 { animation-delay: 9s; }
+  @keyframes stationOn {
+    0%       { background: rgba(0, 0, 0, 0.028); box-shadow: 0 0 0 1px rgba(0, 122, 255, 0); transform: none; }
+    4%, 22%  { background: rgba(0, 122, 255, 0.055); box-shadow: 0 0 0 1px rgba(0, 122, 255, 0.32), 0 8px 22px rgba(0, 122, 255, 0.1); transform: translateY(-3px); }
+    28%, 100% { background: rgba(0, 0, 0, 0.028); box-shadow: 0 0 0 1px rgba(0, 122, 255, 0); transform: none; }
+  }
+  .s-name { font-size: 12.5px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .s-sub  { font-size: 10.5px; color: var(--smoke); margin-top: 4px; line-height: 1.35; }
+  .s-chip {
+    display: inline-flex; align-items: center; gap: 4px; margin-top: 9px;
+    font-size: 10px; font-weight: 600; letter-spacing: 0;
+    border-radius: 50px; padding: 3px 9px;
+    background: rgba(0, 122, 255, 0.09); color: var(--blue);
+    opacity: 0; transform: translateY(5px) scale(0.94);
+    animation: chipIn 12s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  .station.s2 .s-chip { animation-delay: 3s; }
+  .station.s3 .s-chip { animation-delay: 6s; }
+  .station.s4 .s-chip { animation-delay: 9s; }
+  @keyframes chipIn {
+    0%, 4%    { opacity: 0; transform: translateY(5px) scale(0.94); }
+    9%, 22%   { opacity: 1; transform: none; }
+    28%, 100% { opacity: 0; transform: translateY(-3px) scale(0.97); }
+  }
+  .s-chip svg { flex: none; }
+  .l-link { flex: 0 0 26px; align-self: center; height: 2px; background: rgba(0, 0, 0, 0.13); position: relative; }
+  .l-link::after {
+    content: ''; position: absolute; right: -1px; top: -3px;
+    border-left: 6px solid rgba(0, 0, 0, 0.22);
+    border-top: 4px solid transparent; border-bottom: 4px solid transparent;
+  }
+  .l-dot {
+    position: absolute; top: -2.5px; left: -3px; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--blue); opacity: 0;
+    animation: lhop 12s cubic-bezier(0.5, 0, 0.3, 1) infinite;
+  }
+  .l-link.k1 .l-dot { animation-delay: 2.5s; }
+  .l-link.k2 .l-dot { animation-delay: 5.5s; }
+  .l-link.k3 .l-dot { animation-delay: 8.5s; }
+  @keyframes lhop {
+    0%        { left: -3px; opacity: 0; }
+    1%        { opacity: 1; }
+    5%        { left: calc(100% - 4px); opacity: 1; }
+    6.5%, 100% { left: calc(100% - 4px); opacity: 0; }
+  }
+  .loop-return { position: relative; height: 40px; margin-top: 10px; }
+  .loop-return .rline {
+    position: absolute; left: 11%; right: 11%; top: 0; height: 22px;
+    border: 2px solid rgba(0, 0, 0, 0.11); border-top: 0; border-radius: 0 0 14px 14px;
+  }
+  .loop-return .rarrow {
+    position: absolute; left: calc(11% - 5px); top: -6px;
+    border-bottom: 7px solid rgba(0, 0, 0, 0.22);
+    border-left: 6px solid transparent; border-right: 6px solid transparent;
+  }
+  .loop-return .rdot {
+    position: absolute; top: 18.5px; right: 11%; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--blue); opacity: 0;
+    animation: rhop 12s cubic-bezier(0.5, 0, 0.3, 1) infinite 10.9s;
+  }
+  @keyframes rhop {
+    0%       { right: 11%; opacity: 0; }
+    2%       { opacity: 1; }
+    8%       { right: calc(89% - 7px); opacity: 1; }
+    9%, 100% { right: calc(89% - 7px); opacity: 0; }
+  }
+  .loop-return .rlabel {
+    position: absolute; left: 50%; transform: translateX(-50%); top: 12px;
+    background: var(--paper); padding: 0 12px;
+    font-size: 11px; font-weight: 500; color: var(--smoke); white-space: nowrap;
+  }
+  .loop-seal {
+    margin: 4px auto 0; max-width: 460px;
+    display: flex; align-items: center; justify-content: center; gap: 9px; flex-wrap: wrap;
+    border-radius: 50px; padding: 10px 18px;
+    background: rgba(0, 0, 0, 0.028); box-shadow: 0 0 0 1px rgba(0, 122, 255, 0);
+    font-size: 11.5px; font-weight: 600; color: var(--smoke);
+    animation: sealOn 12s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  .loop-seal .sep { opacity: 0.4; font-weight: 400; }
+  .seal-mark {
+    width: 17px; height: 17px; border-radius: 50%; flex: none;
+    display: grid; place-items: center;
+    background: rgba(0, 0, 0, 0.1); color: #fff; font-size: 10px; font-weight: 700;
+    animation: sealMark 12s cubic-bezier(0.34, 1.4, 0.64, 1) infinite;
+  }
+  @keyframes sealOn {
+    0%, 74%   { background: rgba(0, 0, 0, 0.028); box-shadow: 0 0 0 1px rgba(0, 122, 255, 0); color: var(--smoke); }
+    80%, 97%  { background: rgba(0, 122, 255, 0.06); box-shadow: 0 0 0 1px rgba(0, 122, 255, 0.28); color: var(--graphite); }
+    100%      { background: rgba(0, 0, 0, 0.028); color: var(--smoke); }
+  }
+  @keyframes sealMark {
+    0%, 74%  { background: rgba(0, 0, 0, 0.1); transform: scale(1); }
+    79%      { background: var(--blue); transform: scale(1.22); }
+    83%, 97% { background: var(--blue); transform: scale(1); }
+    100%     { background: rgba(0, 0, 0, 0.1); }
+  }
+  .loop figcaption { margin-top: 14px; font-size: 12px; color: var(--smoke); text-align: center; }
+  @media (max-width: 680px) {
+    .loop-track { flex-direction: column; }
+    .l-link { flex: 0 0 18px; width: 2px; height: 18px; align-self: center; }
+    .l-link::after { right: auto; top: auto; left: -3px; bottom: -1px;
+      border-left: 4px solid transparent; border-right: 4px solid transparent;
+      border-top: 5px solid rgba(0, 0, 0, 0.16); border-bottom: 0; }
+    .l-dot { display: none; }
+    .loop-return { height: auto; margin-top: 14px; text-align: center; }
+    .loop-return .rline, .loop-return .rarrow, .loop-return .rdot { display: none; }
+    .loop-return .rlabel {
+      position: static; transform: none; display: inline-block;
+      border: 1px dashed var(--hairline); border-radius: 50px; padding: 5px 14px; white-space: normal;
+    }
+    .loop-seal { margin-top: 14px; flex-direction: column; gap: 5px; border-radius: 18px; }
+    .loop-seal .sep { display: none; }
+  }
+
+  /* ---------- standing house rules ---------- */
+  .rules { margin-top: 40px; }
+  .rules-inner {
+    background: var(--paper); border-radius: 22px; box-shadow: 0 0 0 1px var(--hairline);
+    padding: 26px 24px;
+    display: grid; grid-template-columns: 1fr 40px 1fr; align-items: center;
+  }
+  .quiet .rules-inner { box-shadow: 0 0 0 5px var(--canvas), 0 0 0 6px var(--hairline); }
+  .r-folder { display: grid; gap: 7px; justify-items: start; }
+  .r-head {
+    display: flex; align-items: center; gap: 7px; margin-bottom: 4px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--smoke);
+  }
+  .r-rule {
+    font-size: 11.5px; font-weight: 600; border-radius: 50px; padding: 5px 12px;
+    background: rgba(0, 0, 0, 0.045); color: var(--graphite);
+    animation: ruleGlow 9s ease-in-out infinite; animation-delay: calc(var(--i) * 1.6s);
+  }
+  @keyframes ruleGlow {
+    0%, 5%    { background: rgba(0, 0, 0, 0.045); color: var(--graphite); }
+    10%, 15%  { background: rgba(0, 122, 255, 0.12); color: var(--blue); }
+    22%, 100% { background: rgba(0, 0, 0, 0.045); color: var(--graphite); }
+  }
+  .r-arrow { position: relative; height: 2px; background: rgba(0, 0, 0, 0.13); }
+  .r-arrow::after {
+    content: ''; position: absolute; right: -1px; top: -3px;
+    border-left: 6px solid rgba(0, 0, 0, 0.22);
+    border-top: 4px solid transparent; border-bottom: 4px solid transparent;
+  }
+  .r-dot {
+    position: absolute; top: -2.5px; left: -3px; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--blue); opacity: 0;
+    animation: rulehop 9s cubic-bezier(0.5, 0, 0.3, 1) infinite;
+    animation-delay: calc(var(--i) * 1.6s + 0.9s);
+  }
+  @keyframes rulehop {
+    0%        { left: -3px; opacity: 0; }
+    2%        { opacity: 1; }
+    7%        { left: calc(100% - 4px); opacity: 1; }
+    9%, 100%  { left: calc(100% - 4px); opacity: 0; }
+  }
+  .r-stack { position: relative; padding: 10px 0 0 10px; }
+  .r-card {
+    border-radius: 16px; background: var(--paper); box-shadow: 0 0 0 1px var(--hairline);
+  }
+  .r-card.back { position: absolute; top: 0; left: 0; right: 20px; height: 46px; }
+  .r-card.b2 { transform: translate(-10px, -10px); opacity: 0.5; }
+  .r-card.b1 { transform: translate(-5px, -5px); opacity: 0.75; }
+  .r-card.front { position: relative; padding: 14px 16px 15px; box-shadow: 0 0 0 1px var(--hairline), 0 10px 26px rgba(0, 0, 0, 0.06); }
+  .r-card-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .r-card-sub { font-size: 11px; color: var(--smoke); margin-top: 2px; }
+  .r-stamps { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 11px; }
+  .r-stamp {
+    font-size: 10px; font-weight: 600; border-radius: 50px; padding: 3px 9px;
+    background: rgba(0, 122, 255, 0.09); color: var(--blue);
+    opacity: 0; transform: scale(1.5) rotate(-5deg);
+    animation: stampIn 9s cubic-bezier(0.2, 1.5, 0.5, 1) infinite;
+    animation-delay: calc(var(--i) * 1.6s + 1.3s);
+  }
+  @keyframes stampIn {
+    0%, 2%    { opacity: 0; transform: scale(1.5) rotate(-5deg); }
+    6%        { opacity: 1; transform: scale(1) rotate(0deg); }
+    88%       { opacity: 1; transform: scale(1) rotate(0deg); }
+    96%, 100% { opacity: 0; transform: scale(1) rotate(0deg); }
+  }
+  .rules figcaption { margin-top: 14px; font-size: 12px; color: var(--smoke); text-align: center; }
+  @media (max-width: 680px) {
+    .rules-inner { grid-template-columns: 1fr; gap: 0; }
+    .r-arrow { width: 2px; height: 26px; margin: 16px auto; }
+    .r-arrow::after { right: auto; top: auto; left: -3px; bottom: -1px;
+      border-left: 4px solid transparent; border-right: 4px solid transparent;
+      border-top: 5px solid rgba(0, 0, 0, 0.16); border-bottom: 0; }
+    .r-dot { animation: none; display: none; }
+    .r-stack { padding: 12px 12px 0 12px; }
+    .r-card.back { right: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero { animation: none; }
+    .loop *, .rules * { animation: none !important; }
+    .s-chip, .r-stamp { opacity: 1; transform: none; }
+    .station { background: rgba(0, 0, 0, 0.028); }
+    .l-dot, .rdot, .r-dot { display: none; }
+    .btn::after { display: none; }
+  }
+
   /* ---------- download ---------- */
   .download { text-align: center; }
   .download .lede { margin: 0 auto 36px; }
@@ -326,6 +571,7 @@
     text-align: center; padding: 48px 24px 64px; font-size: 12.5px; color: var(--smoke);
   }
   footer .fbrand { font-family: var(--serif); font-size: 18px; color: var(--ink); margin-bottom: 8px; }
+  footer .fsep { opacity: 0.4; margin: 0 7px; }
   a { color: var(--blue); text-decoration: none; }
   a:hover { text-decoration: underline; }
 </style>
@@ -433,6 +679,65 @@
 
 <section>
   <div class="wrap">
+    <div class="label reveal">The build loop</div>
+    <h2 class="reveal">Then it builds.</h2>
+    <p class="lede reveal">
+      The spec is finished — the enforcement isn’t. The same server now hands out the work:
+      one task at a time, in dependency order, each one carrying the exact specs and choices it has
+      to respect. “Done” isn’t a claim, it’s evidence. And the loop can’t be walked out of early —
+      it closes only when everything still lines up and a fresh session, one that never wrote a line
+      of the code, has signed it off.
+    </p>
+
+    <figure class="loop reveal" aria-label="Animated diagram of the build loop: the server hands out the next task in dependency order, the agent builds it against its specs, proves it, and the task turns verified — then the loop repeats until a convergence check and an independent review close it">
+      <div class="loop-inner">
+        <div class="loop-track">
+          <div class="station s1">
+            <div class="s-name">get_next_task</div>
+            <div class="s-sub">chosen by the server</div>
+            <span class="s-chip"><svg width="9" height="10" viewBox="0 0 9 10" aria-hidden="true"><rect x="0.5" y="4" width="8" height="5.5" rx="1.6" fill="currentColor"/><path d="M2.4 4.2V2.7a2.1 2.1 0 0 1 4.2 0v1.5" stroke="currentColor" stroke-width="1.1" fill="none"/></svg> dependency order</span>
+          </div>
+          <div class="l-link k1" aria-hidden="true"><span class="l-dot"></span></div>
+          <div class="station s2">
+            <div class="s-name">build it</div>
+            <div class="s-sub">with the specs attached</div>
+            <span class="s-chip"><svg width="9" height="10" viewBox="0 0 9 10" aria-hidden="true"><rect x="0.6" y="0.6" width="7.8" height="8.8" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M2.6 3.3h3.8M2.6 5h3.8M2.6 6.7h2.2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg> respects spec #12</span>
+          </div>
+          <div class="l-link k2" aria-hidden="true"><span class="l-dot"></span></div>
+          <div class="station s3">
+            <div class="s-name">prove it</div>
+            <div class="s-sub">what ran, what appeared</div>
+            <span class="s-chip">proof attached</span>
+          </div>
+          <div class="l-link k3" aria-hidden="true"><span class="l-dot"></span></div>
+          <div class="station s4">
+            <div class="s-name">verified</div>
+            <div class="s-sub">green, and it stays green</div>
+            <span class="s-chip">✓ closed</span>
+          </div>
+        </div>
+        <div class="loop-return">
+          <div class="rline" aria-hidden="true"></div>
+          <div class="rarrow" aria-hidden="true"></div>
+          <div class="rdot" aria-hidden="true"></div>
+          <div class="rlabel">next task — no way out of the loop</div>
+        </div>
+        <div class="loop-seal">
+          <span class="seal-mark" aria-hidden="true">✓</span>
+          <span>convergence check</span>
+          <span class="sep">·</span>
+          <span>fresh-eyes review</span>
+          <span class="sep">·</span>
+          <span>only then: shipped</span>
+        </div>
+      </div>
+      <figcaption>Every task carries its own specs, and nothing closes on a promise.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="quiet">
+  <div class="wrap">
     <div class="label reveal">A look inside</div>
     <h2 class="reveal">Real pixels, real project.</h2>
     <p class="lede reveal">Three moments from the screenshot above — the kind of thing the board does for you all day.</p>
@@ -456,7 +761,7 @@
   </div>
 </section>
 
-<section class="quiet">
+<section>
   <div class="wrap">
     <div class="label reveal">Why it’s different</div>
     <h2 class="reveal">An agent that can’t cut corners.</h2>
@@ -466,12 +771,58 @@
     </p>
     <div class="grid">
       <div class="cell reveal"><b>Proof, not promises</b><p>A step can’t be marked done without evidence: what was run, what appeared on screen. It’s shown to you under every finished step.</p></div>
-      <div class="cell reveal" style="--d:0.06s"><b>Independent review, enforced</b><p>A project can’t close until a fresh session — one that didn’t write the code — has reviewed it. And yesterday’s review never covers today’s changes.</p></div>
+      <div class="cell reveal"><b>Independent review, enforced</b><p>A project can’t close until a fresh session — one that didn’t write the code — has reviewed it. And yesterday’s review never covers today’s changes.</p></div>
       <div class="cell reveal"><b>Security is not optional</b><p>Every plan must end with tests and a security &amp; privacy pass. Skipping anything requires a written reason that lands on your board, visibly.</p></div>
-      <div class="cell reveal" style="--d:0.06s"><b>It notices drift</b><p>If the code changes while nobody’s watching the board, you get a warning before anything is trusted again.</p></div>
+      <div class="cell reveal"><b>It notices drift</b><p>If the code changes while nobody’s watching the board, you get a warning before anything is trusted again.</p></div>
       <div class="cell reveal"><b>House rules above projects</b><p>Company charter, compliance, “always in French”, “data stays in the EU” — set standing rules once per folder; every project inside follows them, in every phase.</p></div>
-      <div class="cell reveal" style="--d:0.06s"><b>The board talks back</b><p>Click any card, leave a note in your own words. Your agent treats it as top priority and reports back what it did about it.</p></div>
+      <div class="cell reveal"><b>The board talks back</b><p>Click any card, leave a note in your own words. Your agent treats it as top priority and reports back what it did about it.</p></div>
     </div>
+  </div>
+</section>
+
+<section class="quiet">
+  <div class="wrap">
+    <div class="label reveal">House rules</div>
+    <h2 class="reveal">Rules that are already there.</h2>
+    <p class="lede reveal">
+      Your company’s non-negotiables shouldn’t be re-explained at the start of every project.
+      Put them on a folder once — security, design, structure, or anything else you care about,
+      from a ready-made preset or in your own words. Every project born in that folder starts
+      with them already loaded, from the first spec to the last line of code.
+    </p>
+
+    <figure class="rules reveal" aria-label="Animated diagram: three standing rules set on a folder — security, design and structure — are stamped automatically onto every new project created inside it">
+      <div class="rules-inner">
+        <div class="r-folder">
+          <div class="r-head">
+            <svg width="12" height="10" viewBox="0 0 12 10" aria-hidden="true"><path d="M0.6 2.1a1.2 1.2 0 0 1 1.2-1.2h2.5l1.1 1.3h5a1.2 1.2 0 0 1 1.2 1.2v5a1.2 1.2 0 0 1-1.2 1.2H1.8A1.2 1.2 0 0 1 .6 8.4V2.1Z" fill="currentColor"/></svg>
+            Your folder
+          </div>
+          <span class="r-rule" style="--i:0">Security — no secrets in code</span>
+          <span class="r-rule" style="--i:1">Design — tokens only</span>
+          <span class="r-rule" style="--i:2">Structure — small modules</span>
+        </div>
+        <div class="r-arrow" aria-hidden="true">
+          <span class="r-dot" style="--i:0"></span>
+          <span class="r-dot" style="--i:1"></span>
+          <span class="r-dot" style="--i:2"></span>
+        </div>
+        <div class="r-stack">
+          <div class="r-card back b2" aria-hidden="true"></div>
+          <div class="r-card back b1" aria-hidden="true"></div>
+          <div class="r-card front">
+            <div class="r-card-title">New project</div>
+            <div class="r-card-sub">created inside the folder — day one</div>
+            <div class="r-stamps">
+              <span class="r-stamp" style="--i:0">Security</span>
+              <span class="r-stamp" style="--i:1">Design</span>
+              <span class="r-stamp" style="--i:2">Structure</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <figcaption>Set them once. Every project born in the folder obeys them — in every phase.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -495,7 +846,9 @@
 
 <footer>
   <div class="fbrand">SpecDrive</div>
-  Built for people who’d rather describe software than write it.<br />
+  Crafted by Connected Mate<br />
+  <a href="https://github.com/Connected-Mate/specdrive">Open source on GitHub</a>
+  <span class="fsep">·</span>
   <a href="https://github.com/Connected-Mate/specdrive-site/releases">All releases</a>
 </footer>
 
@@ -511,6 +864,21 @@
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+    // Featherweight parallax on the hero screenshot (max 8px of travel).
+    var shot = document.querySelector('.shot-frame img');
+    if (!shot) return;
+    var queued = false;
+    function paint() {
+      queued = false;
+      var d = window.scrollY * 0.05;
+      if (d > 8) d = 8;
+      shot.style.transform = 'translate3d(0,' + d.toFixed(2) + 'px,0) scale(1.03)';
+    }
+    window.addEventListener('scroll', function () {
+      if (!queued) { queued = true; requestAnimationFrame(paint); }
+    }, { passive: true });
+    paint();
   })();
 </script>
 
