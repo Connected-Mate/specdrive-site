@@ -5,7 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SpecDrive — your idea, built for real</title>
 <meta name="description" content="SpecDrive turns a spoken idea into a rigorously built product. Your AI coding agent does the work; a live spec board keeps it honest — specs, scenarios, proof-gated steps, independent review." />
+<link rel="alternate" hreflang="en" href="https://connected-mate.github.io/specdrive-site/" />
+<link rel="alternate" hreflang="fr" href="https://connected-mate.github.io/specdrive-site/fr/" />
+<link rel="alternate" hreflang="x-default" href="https://connected-mate.github.io/specdrive-site/" />
 <meta property="og:type" content="website" />
+<meta property="og:locale" content="en_US" />
 <meta property="og:url" content="https://connected-mate.github.io/specdrive-site/" />
 <meta property="og:site_name" content="SpecDrive" />
 <meta property="og:title" content="SpecDrive — your idea, built for real" />
@@ -694,6 +698,81 @@
   .resume figcaption { margin-top: 12px; font-size: 12px; color: var(--smoke); text-align: center; }
   @media (prefers-reduced-motion: reduce) { .r-box.active, .r-tag.live { animation: none; } }
 
+  /* ---------- full-bleed dusk band: the colour comes back mid-page ---------- */
+  .band {
+    background: var(--dusk);
+    background-size: 100% 150%;
+    background-position: 0% 30%;
+    color: #fff;
+    padding: 104px 24px;
+    text-align: center;
+  }
+  .band-quote {
+    font-family: var(--serif);
+    font-size: clamp(30px, 5.4vw, 50px);
+    line-height: 1.06;
+    letter-spacing: -0.01em;
+    max-width: 720px;
+    margin: 0 auto 18px;
+  }
+  .band-quote em { font-style: italic; }
+  .band-sub { font-size: 15px; opacity: 0.9; max-width: 520px; margin: 0 auto; }
+
+  /* ---------- FAQ ---------- */
+  .faq { margin-top: 40px; display: grid; gap: 10px; }
+  .faq details {
+    background: var(--paper);
+    border-radius: 22px;
+    box-shadow: 0 0 0 5px var(--canvas), 0 0 0 6px var(--hairline);
+    padding: 4px 24px;
+    transition: box-shadow 0.25s ease;
+  }
+  .faq summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 16px 28px 16px 0;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+    position: relative;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after {
+    content: '+';
+    position: absolute; right: 0; top: 50%;
+    transform: translateY(-50%);
+    font-size: 19px; font-weight: 400; color: var(--smoke);
+    transition: transform 0.3s var(--spring), color 0.2s ease;
+  }
+  .faq details[open] summary::after { transform: translateY(-50%) rotate(45deg); color: var(--blue); }
+  .faq details p { font-size: 13.5px; color: var(--smoke); padding: 0 8px 18px 0; line-height: 1.6; }
+
+  /* ---------- reading progress hairline ---------- */
+  .progress {
+    position: fixed; top: 0; left: 0; height: 2px; width: 0;
+    background: linear-gradient(90deg, #4a7ff2, #7b7ed8 40%, #c98ab5 75%, #e8a87c);
+    z-index: 50; pointer-events: none;
+    transition: width 0.1s linear;
+  }
+
+  /* ---------- language switch ---------- */
+  .lang {
+    position: absolute; top: 26px; right: 30px; z-index: 8;
+    display: flex; gap: 2px; align-items: center;
+    font-size: 11.5px; font-weight: 600;
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(8px);
+    border-radius: 50px; padding: 4px;
+  }
+  .lang a {
+    color: rgba(255, 255, 255, 0.82);
+    padding: 4px 11px; border-radius: 50px; text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .lang a:hover { color: #fff; text-decoration: none; }
+  .lang a.on { background: #fff; color: var(--ink); }
+  @media (max-width: 620px) { .lang { top: 16px; right: 16px; } }
+
   /* ---------- download ---------- */
   .download { text-align: center; }
   .download .lede { margin: 0 auto 36px; }
@@ -759,7 +838,10 @@
 </head>
 <body>
 
+<div class="progress" id="progress" aria-hidden="true"></div>
+
 <header class="hero">
+  <nav class="lang" aria-label="Language"><a href="./" class="on" data-lang="en">EN</a><a href="./fr/" data-lang="fr">FR</a></nav>
   <div class="warp warp-l" aria-hidden="true"></div>
   <div class="warp warp-r" aria-hidden="true"></div>
   <div class="brand">
@@ -968,6 +1050,14 @@
   </div>
 </section>
 
+
+<section class="band">
+  <div class="band-inner">
+    <p class="band-quote">A supervisor the AI<br /><em>cannot talk its way past.</em></p>
+    <p class="band-sub">Every step proven. Every change re-checked. Nothing closed on a promise.</p>
+  </div>
+</section>
+
 <section>
   <div class="wrap">
     <div class="label reveal">A look inside</div>
@@ -1058,6 +1148,26 @@
   </div>
 </section>
 
+
+<section class="quiet">
+  <div class="wrap">
+    <div class="label reveal">Good to know</div>
+    <h2 class="reveal title">Before you download.</h2>
+    <div class="faq">
+      <details class="reveal"><summary>Do I need an AI coding tool already?</summary>
+        <p>Yes — SpecDrive supervises the one you use (Claude Code, Cursor, Windsurf, Gemini, Codex…). It doesn’t write code itself; it makes sure the one that does can’t skip steps or claim work it hasn’t proven.</p></details>
+      <details class="reveal"><summary>Where does my project data live?</summary>
+        <p>On your Mac, in plain files you own. SpecDrive has no account, no server, no telemetry. Your specs never leave your machine.</p></details>
+      <details class="reveal"><summary>Is it really free?</summary>
+        <p>Free, and open source. The whole thing — the board, the server, the rules — is on GitHub, and you can read exactly what it does.</p></details>
+      <details class="reveal"><summary>What if I’m not technical at all?</summary>
+        <p>That’s who it’s built for. You describe what you want in your own words; the board is written in plain language, and you can leave a note on any card that your AI reads on its next pass.</p></details>
+      <details class="reveal"><summary>What if my AI plan runs out mid-build?</summary>
+        <p>Nothing is lost. Every finished step is already saved with its proof, so a fresh session picks up at the exact next step.</p></details>
+    </div>
+  </div>
+</section>
+
 <section class="download">
   <div class="wrap">
     <div class="label reveal">Get it</div>
@@ -1101,6 +1211,42 @@
 </div><!-- /sheet -->
 
 <script>
+  (function () {
+    var bar = document.getElementById('progress');
+    if (!bar || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = h > 0 ? ((window.scrollY / h) * 100).toFixed(2) + '%' : '0';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  (function () {
+    // First visit from a French browser lands on the French page.
+    try {
+      if (location.pathname.indexOf('/fr') !== -1) return;
+      if (localStorage.getItem('sd-lang')) return;
+      if ((navigator.language || '').toLowerCase().indexOf('fr') === 0) {
+        localStorage.setItem('sd-lang', 'fr');
+        location.replace('./fr/');
+      }
+    } catch (e) { /* storage blocked — stay on English */ }
+  })();
+
+  (function () {
+    // Clicking the switcher pins the language for future visits.
+    document.querySelectorAll('.lang a[data-lang]').forEach(function (a) {
+      a.addEventListener('click', function () {
+        try { localStorage.setItem('sd-lang', a.getAttribute('data-lang')); } catch (e) { /* storage blocked */ }
+      });
+    });
+  })();
+
   (function () {
     var hero = document.querySelector('.hero');
     if (!hero || !hero.querySelector('.warp-l') ||
