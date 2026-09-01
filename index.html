@@ -7,7 +7,7 @@
 <meta name="description" content="SpecDrive turns a spoken idea into a rigorously built product. Your AI coding agent does the work; a live spec board keeps it honest — specs, scenarios, proof-gated steps, independent review." />
 <meta property="og:title" content="SpecDrive — your idea, built for real" />
 <meta property="og:description" content="Say what you want. Watch it get built right. A Mac app that keeps your AI coding agent honest." />
-<meta property="og:image" content="https://connected-mate.github.io/specdrive-site/assets/board.png" />
+<meta property="og:image" content="https://connected-mate.github.io/specdrive-site/assets/board-full.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -130,7 +130,7 @@
   .hero .hint { margin-top: 14px; font-size: 12.5px; opacity: 0.8; }
 
   /* ---------- real app screenshot, floating out of the hero ---------- */
-  .shot-wrap { max-width: 960px; margin: -170px auto 0; padding: 0 20px; position: relative; z-index: 2; }
+  .shot-wrap { max-width: 880px; margin: -170px auto 0; padding: 0 20px; position: relative; z-index: 2; }
   .shot-frame {
     border-radius: 18px;
     overflow: hidden;
@@ -190,14 +190,8 @@
   }
   .detail:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px var(--hairline), 0 12px 30px rgba(0, 0, 0, 0.08); }
   .detail.wide { grid-column: 1 / -1; }
-  .crop {
-    background-image: url('assets/board.png');
-    background-repeat: no-repeat;
-    border-bottom: 1px solid var(--hairline);
-  }
-  .crop-verdict { aspect-ratio: 2.6 / 1;  background-size: 308% auto; background-position: 4.4% 60%; }
-  .crop-rail    { aspect-ratio: 1.14 / 1; background-size: 450% auto; background-position: 98.4% 53.5%; }
-  .crop-dives   { aspect-ratio: 1.27 / 1; background-size: 450% auto; background-position: 98.4% 94.6%; }
+  .crop { display: block; width: 100%; height: auto; border-bottom: 1px solid var(--hairline); }
+  .crop-pad { padding: 14px 16px 0; }
   .detail figcaption { padding: 16px 20px; }
   .detail figcaption b { display: block; font-size: 13.5px; color: var(--ink); font-weight: 600; margin-bottom: 3px; }
   .detail figcaption span { font-size: 12.5px; color: var(--smoke); line-height: 1.5; display: block; }
@@ -595,7 +589,7 @@
 
 <div class="shot-wrap">
   <div class="shot-frame">
-    <img src="assets/board.png" alt="The SpecDrive board: specs written live by an AI agent, a challenge verdict, the phase stepper and the next-step prompt" width="2000" height="1344" />
+    <img src="assets/board-full.png" alt="The SpecDrive board: specs written live by an AI agent, a challenge verdict, the phase stepper and the next-step prompt" width="2560" height="1720" />
   </div>
   <div class="shot-caption"><span class="live-dot"></span> A real project, filled live by Claude Code — nothing in this screenshot was typed by a human.</div>
 </div>
@@ -743,17 +737,17 @@
     <p class="lede reveal">Three moments from the screenshot above — the kind of thing the board does for you all day.</p>
     <div class="details">
       <figure class="detail wide reveal">
-        <div class="crop crop-verdict" role="img" aria-label="A challenge note on a spec: the AI found a contradiction between two specs and flagged it"></div>
+        <img class="crop" src="assets/crop-verdict.png" width="880" height="350" loading="lazy" alt="A challenge note on a spec: the AI found a contradiction between two specs and flagged it" />
         <figcaption><b>The AI challenges its own specs</b>
           <span>A fresh session hunted this contradiction down before a single line of code existed — and wrote it on the card, in plain words.</span></figcaption>
       </figure>
       <figure class="detail reveal">
-        <div class="crop crop-rail" role="img" aria-label="The next-step rail: where you are, what to do next, one button to copy the prompt"></div>
+        <img class="crop" src="assets/crop-rail.png" width="595" height="1040" loading="lazy" alt="The next-step rail: where you are, what to do next, one button to copy the prompt" />
         <figcaption><b>Always one obvious next step</b>
           <span>The rail shows where you are in the loop and hands you the exact prompt to paste. One blue button at a time.</span></figcaption>
       </figure>
       <figure class="detail reveal" style="--d:0.08s">
-        <div class="crop crop-dives" role="img" aria-label="Hard parts flagged for a dedicated deep-dive session"></div>
+        <img class="crop" src="assets/crop-dives.png" width="595" height="450" loading="lazy" alt="Hard parts flagged for a dedicated deep-dive session" />
         <figcaption><b>Hard parts get their own session</b>
           <span>Genuinely difficult topics are flagged and get a dedicated investigation prompt — not hand-waved into the plan.</span></figcaption>
       </figure>
