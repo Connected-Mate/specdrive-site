@@ -418,8 +418,8 @@ t(
 );
 t('<span class="btn-arrow" aria-hidden="true">↓</span>&nbsp; Download SpecDrive for Mac', '<span class="btn-arrow" aria-hidden="true">↓</span>&nbsp; Télécharger SpecDrive pour Mac');
 t(
-  'Version 0.1.3 · macOS 13+ · Macs with Apple chips (M1 and newer) · Free',
-  'Version 0.1.3 · macOS 13+ · Mac à puce Apple (M1 et plus récents) · Gratuit'
+  'Version 0.1.4 · macOS 13+ · Macs with Apple chips (M1 and newer) · Free',
+  'Version 0.1.4 · macOS 13+ · Mac à puce Apple (M1 et plus récents) · Gratuit'
 );
 
 /* ----------------------------------------------------------------- oss --- */
