@@ -106,29 +106,45 @@
     from { background-position: 0% 4%; }
     to   { background-position: 0% 96%; }
   }
-  /* The gradient PARTS under the cursor: two halves of the same dusk sheet,
-     split at the pointer's x, sliding away from it — a soft white seam opens
-     between them, like curtains. No light overlay, only the gradient moving. */
+  /* The gradient itself reacts: its colour stops slide and its angle turns
+     under the cursor, so the bands swell and give way. No overlay, no seam,
+     no white — the palette is simply deformed. */
   .warp {
     position: absolute;
-    inset: 0;
+    inset: -8%;
     z-index: 0;
     pointer-events: none;
-    background: var(--dusk);
-    background-size: 100% 128%;
-    background-position: 0% 12%;
-    animation: duskDrift 34s ease-in-out infinite alternate;
-    will-change: transform, clip-path;
+    background: linear-gradient(
+      var(--ang, 180deg),
+      #4a7ff2 var(--s1, 0%),
+      #7b7ed8 var(--s2, 30%),
+      #c98ab5 var(--s3, 65%),
+      #e8a87c var(--s4, 100%)
+    );
+    animation: duskBreathe 34s ease-in-out infinite alternate;
+    will-change: background-position, transform;
   }
-  .warp-l { clip-path: inset(0 calc(100% - var(--sx, 50%)) 0 0); transform: translateX(calc(var(--part, 0px) * -1)); }
-  .warp-r { clip-path: inset(0 0 0 var(--sx, 50%)); transform: translateX(var(--part, 0px)); }
-  /* Soft edge on each half so the seam is a feathered white breath, not a blade */
-  .warp-l { -webkit-mask-image: linear-gradient(to right, #000 calc(var(--sx, 50%) - 14px), rgba(0,0,0,0.55) calc(var(--sx, 50%) - 4px), transparent calc(var(--sx, 50%) - 1px)); mask-image: linear-gradient(to right, #000 calc(var(--sx, 50%) - 14px), rgba(0,0,0,0.55) calc(var(--sx, 50%) - 4px), transparent calc(var(--sx, 50%) - 1px)); }
-  .warp-r { -webkit-mask-image: linear-gradient(to left, #000 calc(100% - var(--sx, 50%) - 14px), rgba(0,0,0,0.55) calc(100% - var(--sx, 50%) - 4px), transparent calc(100% - var(--sx, 50%) - 1px)); mask-image: linear-gradient(to left, #000 calc(100% - var(--sx, 50%) - 14px), rgba(0,0,0,0.55) calc(100% - var(--sx, 50%) - 4px), transparent calc(100% - var(--sx, 50%) - 1px)); }
-  /* Masks only bite while parted — at rest both halves overlap seamlessly */
-  .hero:not(.warping) .warp-l, .hero:not(.warping) .warp-r {
-    -webkit-mask-image: none; mask-image: none;
-    clip-path: inset(0 0 0 0);
+  /* Second sheet of the same palette, turned the other way, so the two sets of
+     bands slide across each other where the pointer goes. */
+  .warp-b {
+    inset: -14%;
+    opacity: 0.55;
+    background: linear-gradient(
+      var(--ang-b, 142deg),
+      #4a7ff2 var(--b1, -10%),
+      #7b7ed8 var(--b2, 34%),
+      #c98ab5 var(--b3, 68%),
+      #e8a87c var(--b4, 112%)
+    );
+    animation: duskBreatheB 47s ease-in-out infinite alternate;
+  }
+  @keyframes duskBreathe {
+    from { transform: translate3d(0, -1.5%, 0) scale(1.02); }
+    to   { transform: translate3d(0, 1.5%, 0) scale(1.05); }
+  }
+  @keyframes duskBreatheB {
+    from { transform: translate3d(1.5%, 1%, 0) scale(1.06); }
+    to   { transform: translate3d(-1.5%, -1%, 0) scale(1.02); }
   }
   .hero .brand { margin-bottom: 60px; }
   .brand-stamp {
@@ -774,6 +790,71 @@
   .lang a.on { background: #fff; color: var(--ink); }
   @media (max-width: 620px) { .hero nav.lang { top: 16px; right: 16px; } }
 
+  /* ---------- logo easter egg: hover the stamp, the agents show up ---------- */
+  .brand { position: relative; display: inline-block; }
+  .brand-crew { position: absolute; inset: -190px -260px; pointer-events: none; z-index: 1; }
+  .crew-agent {
+    position: absolute;
+    display: flex; align-items: flex-start; gap: 3px;
+    opacity: 0;
+    transform: translate3d(var(--fx, 0), var(--fy, 0), 0) scale(0.75);
+    transition: opacity 0.45s ease, transform 0.75s var(--spring);
+    transition-delay: var(--cd, 0s);
+  }
+  .brand:hover .crew-agent,
+  .brand:focus-within .crew-agent {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  .crew-agent svg { filter: drop-shadow(0 4px 10px rgba(26, 26, 66, 0.28)); }
+  .crew-label {
+    font-family: var(--sans);
+    font-size: 10.5px; font-weight: 600; color: #fff;
+    background: var(--c, #7b7ed8);
+    border-radius: 4px 50px 50px 50px;
+    padding: 2px 9px 3px;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(26, 26, 66, 0.24);
+  }
+  /* each agent parks somewhere different around the stamp */
+  .crew-1 { top: 150px; left: 8px;   --fx: 46px;  --fy: 26px;  --cd: 0.02s; }
+  .crew-2 { top: 120px; right: 14px; --fx: -52px; --fy: 34px;  --cd: 0.07s; }
+  .crew-3 { top: 244px; left: 78px;  --fx: 30px;  --fy: -30px; --cd: 0.12s; }
+  .crew-4 { top: 232px; right: 66px; --fx: -34px; --fy: -26px; --cd: 0.17s; }
+  .crew-5 { top: 186px; left: 50%;   --fx: 0;     --fy: 44px;  --cd: 0.22s; margin-left: -180px; }
+
+  /* ---------- download button: a real moment on hover ---------- */
+  .btn-white .btn-arrow, .btn-blue .btn-arrow {
+    display: inline-block;
+    transition: transform 0.55s var(--spring);
+  }
+  .btn:hover .btn-arrow { transform: translateY(3px) rotate(360deg); }
+  /* A dusk halo turns behind the pill on hover — the button feels alive,
+     the pill itself stays clean. */
+  .btn-halo { position: relative; display: inline-block; }
+  .btn-halo::before {
+    content: '';
+    position: absolute; inset: -14px;
+    border-radius: 60px;
+    background: conic-gradient(from 0deg, #4a7ff2, #7b7ed8, #c98ab5, #e8a87c, #4a7ff2);
+    filter: blur(14px);
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    animation: spinRing 3.4s linear infinite;
+    animation-play-state: paused;
+    z-index: 0;
+  }
+  .btn-halo:hover::before { opacity: 0.85; animation-play-state: running; }
+  .btn-halo .btn { position: relative; z-index: 1; }
+  @keyframes spinRing { to { transform: rotate(1turn); } }
+  .btn { transform-style: preserve-3d; }
+  .btn:hover { transform: translateY(-2px) scale(1.02); }
+  @media (prefers-reduced-motion: reduce) {
+    .btn:hover .btn-arrow { transform: none; }
+    .btn-halo::before { display: none; }
+    .brand:hover .crew-agent { transition: none; }
+  }
+
   /* ---------- download ---------- */
   .download { text-align: center; }
   .download .lede { margin: 0 auto 36px; }
@@ -843,9 +924,16 @@
 
 <header class="hero">
   <nav class="lang" aria-label="Langue"><a href="../" data-lang="en">EN</a><a href="./" class="on" data-lang="fr">FR</a></nav>
-  <div class="warp warp-l" aria-hidden="true"></div>
-  <div class="warp warp-r" aria-hidden="true"></div>
+  <div class="warp warp-a" aria-hidden="true"></div>
+  <div class="warp warp-b" aria-hidden="true"></div>
   <div class="brand">
+    <span class="brand-crew" aria-hidden="true">
+      <span class="crew-agent crew-1" style="--c: #d97757"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L5.94 2.47a.5.5 0 0 0-.44.74Z" fill="#d97757" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="crew-label">Claude Code</span></span>
+      <span class="crew-agent crew-2" style="--c: #111114"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L5.94 2.47a.5.5 0 0 0-.44.74Z" fill="#111114" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="crew-label">Cursor</span></span>
+      <span class="crew-agent crew-3" style="--c: #2f8f6b"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L5.94 2.47a.5.5 0 0 0-.44.74Z" fill="#2f8f6b" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="crew-label">Windsurf</span></span>
+      <span class="crew-agent crew-4" style="--c: #4a7ff2"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L5.94 2.47a.5.5 0 0 0-.44.74Z" fill="#4a7ff2" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="crew-label">Gemini</span></span>
+      <span class="crew-agent crew-5" style="--c: #6b6b76"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L5.94 2.47a.5.5 0 0 0-.44.74Z" fill="#6b6b76" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="crew-label">Codex</span></span>
+    </span>
     <span class="brand-stamp">SpecDrive
       <span class="brand-cursor" aria-hidden="true">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.48 0 .72-.58.38-.92L5.94 2.47a.5.5 0 0 0-.44.74Z" fill="#7b7ed8" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
@@ -858,8 +946,8 @@
     Vous construisez déjà en parlant à un outil de code IA — Claude Code, Cursor, Windsurf… SpecDrive est le <b>superviseur</b> assis juste à côté&nbsp;: l’IA fait le travail, et elle ne peut rien déclarer «&nbsp;terminé&nbsp;» sans preuve.
   </p>
   <div class="cta">
-    <a class="btn btn-white" href="https://github.com/Connected-Mate/specdrive-site/releases/latest/download/SpecDrive-mac.dmg">
-      ↓&nbsp; Télécharger pour Mac
+    <span class="btn-halo"><a class="btn btn-white" href="https://github.com/Connected-Mate/specdrive-site/releases/latest/download/SpecDrive-mac.dmg">
+      <span class="btn-arrow" aria-hidden="true">↓</span>&nbsp; Télécharger pour Mac
     </a>
   </div>
   <div class="hint">Fonctionne avec l’outil IA que vous utilisez déjà · Tout reste sur votre Mac · Gratuit et open source</div>
@@ -1155,9 +1243,9 @@
     <h2 class="reveal title">Télécharger SpecDrive</h2>
     <p class="lede reveal">SpecDrive ne remplace pas votre outil IA — il supervise celui que vous avez déjà. Un clic connecte les outils que nous détectons&nbsp;; un copier-coller connecte tous les autres. Et tout — vos spécifications, vos plans, vos données — reste sur votre Mac.</p>
     <div class="reveal">
-      <a class="btn btn-blue" href="https://github.com/Connected-Mate/specdrive-site/releases/latest/download/SpecDrive-mac.dmg">
-        ↓&nbsp; Télécharger SpecDrive pour Mac
-      </a>
+      <span class="btn-halo"><a class="btn btn-blue" href="https://github.com/Connected-Mate/specdrive-site/releases/latest/download/SpecDrive-mac.dmg">
+        <span class="btn-arrow" aria-hidden="true">↓</span>&nbsp; Télécharger SpecDrive pour Mac
+      </a></span>
       <div class="dl-meta">Version 0.1.1 · macOS 13+ · Mac à puce Apple (M1 et plus récents) · Gratuit</div>
     </div>
   </div>
@@ -1229,38 +1317,46 @@
 
   (function () {
     var hero = document.querySelector('.hero');
-    if (!hero || !hero.querySelector('.warp-l') ||
+    if (!hero || !hero.querySelector('.warp-a') ||
         !window.matchMedia('(pointer: fine)').matches ||
         window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    // Curtain: the two gradient halves split at the pointer's x and slide
-    // apart a few px — a feathered white seam opens where the mouse passes.
-    var sx = 50, part = 0, tsx = 50, tpart = 0, running = false;
+    // The pointer deforms the gradient: colour stops crowd towards it and open
+    // up behind it, and both sheets rotate slightly the opposite way.
+    var tx = 0, ty = 0, cx = 0, cy = 0, running = false;
+
     function frame() {
-      sx += (tsx - sx) * 0.14;
-      part += (tpart - part) * 0.1;
-      hero.style.setProperty('--sx', sx.toFixed(2) + '%');
-      hero.style.setProperty('--part', part.toFixed(2) + 'px');
-      if (Math.abs(tsx - sx) > 0.05 || Math.abs(tpart - part) > 0.05) {
+      cx += (tx - cx) * 0.08;
+      cy += (ty - cy) * 0.08;
+      // Stops slide with the vertical pointer position; the spread widens
+      // towards the cursor so the bands visibly swell there.
+      var push = cy * 26;          // -26%..26%
+      var spread = 1 + cx * 0.18;  // bands stretch/compress horizontally
+      hero.style.setProperty('--s1', (0 + push * 0.5).toFixed(2) + '%');
+      hero.style.setProperty('--s2', (30 + push * spread).toFixed(2) + '%');
+      hero.style.setProperty('--s3', (65 + push * 0.7 * spread).toFixed(2) + '%');
+      hero.style.setProperty('--s4', (100 + push * 0.35).toFixed(2) + '%');
+      hero.style.setProperty('--ang', (180 + cx * 14).toFixed(2) + 'deg');
+      hero.style.setProperty('--b1', (-10 - push * 0.6).toFixed(2) + '%');
+      hero.style.setProperty('--b2', (34 - push * 0.9).toFixed(2) + '%');
+      hero.style.setProperty('--b3', (68 - push * 0.6).toFixed(2) + '%');
+      hero.style.setProperty('--b4', (112 - push * 0.3).toFixed(2) + '%');
+      hero.style.setProperty('--ang-b', (142 - cx * 20).toFixed(2) + 'deg');
+      if (Math.abs(tx - cx) > 0.001 || Math.abs(ty - cy) > 0.001) {
         requestAnimationFrame(frame);
       } else {
         running = false;
-        if (tpart === 0) hero.classList.remove('warping');
       }
     }
     function start() { if (!running) { running = true; requestAnimationFrame(frame); } }
 
     hero.addEventListener('pointermove', function (e) {
       var r = hero.getBoundingClientRect();
-      tsx = ((e.clientX - r.left) / r.width) * 100;
-      tpart = 6;
-      hero.classList.add('warping');
+      tx = ((e.clientX - r.left) / r.width) * 2 - 1;
+      ty = ((e.clientY - r.top) / r.height) * 2 - 1;
       start();
     }, { passive: true });
-    hero.addEventListener('pointerleave', function () {
-      tpart = 0;
-      start();
-    });
+    hero.addEventListener('pointerleave', function () { tx = 0; ty = 0; start(); });
   })();
 
   (function () {

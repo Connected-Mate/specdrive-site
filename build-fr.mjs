@@ -91,7 +91,7 @@ t(
   'You already build by talking to an AI coding tool — Claude Code, Cursor, Windsurf… SpecDrive is the <b>supervisor</b> that sits beside it: the AI does the work, and it can\'t call anything “done” without proof.',
   'Vous construisez déjà en parlant à un outil de code IA — Claude Code, Cursor, Windsurf… SpecDrive est le <b>superviseur</b> assis juste à côté&nbsp;: l’IA fait le travail, et elle ne peut rien déclarer «&nbsp;terminé&nbsp;» sans preuve.'
 );
-t('↓&nbsp; Download for Mac', '↓&nbsp; Télécharger pour Mac');
+t('<span class="btn-arrow" aria-hidden="true">↓</span>&nbsp; Download for Mac', '<span class="btn-arrow" aria-hidden="true">↓</span>&nbsp; Télécharger pour Mac');
 t(
   'Works with the AI tool you already use · Everything stays on your Mac · Free &amp; open source',
   'Fonctionne avec l’outil IA que vous utilisez déjà · Tout reste sur votre Mac · Gratuit et open source'
@@ -416,7 +416,7 @@ t(
   'SpecDrive doesn’t replace your AI tool — it supervises the one you already have. One click connects the tools we detect; one copy-paste connects any other. And everything — your specs, your plans, your data — stays on your Mac.',
   'SpecDrive ne remplace pas votre outil IA — il supervise celui que vous avez déjà. Un clic connecte les outils que nous détectons&nbsp;; un copier-coller connecte tous les autres. Et tout — vos spécifications, vos plans, vos données — reste sur votre Mac.'
 );
-t('↓&nbsp; Download SpecDrive for Mac', '↓&nbsp; Télécharger SpecDrive pour Mac');
+t('<span class="btn-arrow" aria-hidden="true">↓</span>&nbsp; Download SpecDrive for Mac', '<span class="btn-arrow" aria-hidden="true">↓</span>&nbsp; Télécharger SpecDrive pour Mac');
 t(
   'Version 0.1.1 · macOS 13+ · Macs with Apple chips (M1 and newer) · Free',
   'Version 0.1.1 · macOS 13+ · Mac à puce Apple (M1 et plus récents) · Gratuit'
