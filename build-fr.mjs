@@ -64,16 +64,18 @@ t(
   '<meta name="twitter:title" content="SpecDrive — votre idée, construite pour de vrai" />'
 );
 t(
-  'Say what you want. Watch it get built right. A free Mac app that keeps your AI coding agent honest — specs, proof-gated steps, independent review.',
-  'Dites ce que vous voulez. Voyez-le construit comme il faut. Une app Mac gratuite qui tient votre outil de code IA honnête — spécifications, étapes prouvées, relecture indépendante.'
+  'Give your AI a plan. Watch your idea become a real product. Free, open-source Mac app for Claude Code, Cursor, Codex and more.',
+  'Guidez votre IA. Donnez vie à votre projet. Une app Mac gratuite et open source pour Claude Code, Cursor, Codex et bien d’autres.'
 );
 t(
-  'Say what you want. Watch it get built right. A free Mac app that keeps your AI coding agent honest.',
-  'Dites ce que vous voulez. Voyez-le construit comme il faut. Une app Mac gratuite qui tient votre outil de code IA honnête.'
+  'https://connected-mate.github.io/specdrive-site/assets/specdrive-share-en-20260907.png',
+  'https://connected-mate.github.io/specdrive-site/assets/specdrive-share-fr-20260907.png'
 );
+t('<meta property="og:image:width" content="1730" />', '<meta property="og:image:width" content="1729" />');
+t('<meta property="og:image:height" content="909" />', '<meta property="og:image:height" content="910" />');
 t(
-  'content="The SpecDrive board: specs written live by an AI agent"',
-  'content="Le tableau SpecDrive&nbsp;: des spécifications écrites en direct par une IA"'
+  'SpecDrive — Your idea. Built for real. A preview of the project board. Free and open source for Mac.',
+  'SpecDrive — Votre idée. Pour de vrai. Un aperçu du tableau de projet. Gratuit et open source pour Mac.'
 );
 
 /* ---------------------------------------------------------------- hero --- */
