@@ -918,6 +918,90 @@
     .oss-inner { padding: 22px 22px 24px; }
     .oss-text p { max-width: none; }
   }
+
+  /* ---------- Agent Studio: one document, one observations pane ---------- */
+  .hero { padding-bottom: 180px; }
+  .hero-feature-link { display: inline-block; margin-top: 24px; color: #fff; font-size: 13px; text-decoration: none; text-underline-offset: 5px; }
+  .hero-feature-link:hover { text-decoration: underline; }
+  .personalize { padding: 72px 24px 38px; scroll-margin-top: 22px; }
+  .personalize-intro { padding: 0; text-align: center; }
+  .personalize-intro h2 { font-size: clamp(34px, 5.2vw, 52px); }
+  .personalize-intro .label { color: #526d98; }
+  .personalize-intro .lede { max-width: 590px; margin: 0 auto; font-size: 15px; }
+  .personalize-intro code { font-size: 0.9em; color: var(--ink); }
+  .agent-demo { max-width: 1050px; margin: 38px auto 0; background: #fff; border: 1px solid #dedfe3; border-radius: 15px; box-shadow: 0 18px 60px -32px #63708c55; overflow: hidden; text-align: left; }
+  .agent-demo button { font: inherit; letter-spacing: inherit; cursor: pointer; }
+  .agent-demo [hidden] { display: none !important; }
+  .agent-demo-bar { height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 24px; border-bottom: 1px solid var(--hairline); background: #fcfcfc; }
+  .agent-demo-file { display: inline-flex; align-items: center; gap: 10px; color: #454a53; font-size: 12px; font-weight: 500; }
+  .agent-demo-file svg { color: #9aa0aa; }
+  .agent-demo-label { font-size: 10px; color: #737985; }
+  .agent-demo-workspace { display: grid; grid-template-columns: minmax(0, 1fr) 302px; }
+  .agent-document { min-width: 0; padding: 30px 0 0; display: flex; flex-direction: column; }
+  #agent-document-lines { min-height: 425px; padding: 0 22px 30px 8px; }
+  .agent-line { display: grid; grid-template-columns: 35px minmax(0, 1fr); gap: 15px; min-height: 25px; padding: 2px 10px 2px 0; font: 11.5px/1.85 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: -0.02em; color: #515764; border-left: 2px solid transparent; }
+  .agent-line-no { text-align: right; color: #b1b5bd; font-size: 10px; user-select: none; }
+  .agent-line-text { overflow-wrap: anywhere; white-space: pre-wrap; }
+  .agent-heading { color: #2d3544; font-weight: 600; }
+  .agent-line-removed { background: #fcf0ee; border-left-color: #d6a19b; color: #a4716b; }
+  .agent-line-removed .agent-line-no { color: #c49791; }
+  .agent-line-removed del { text-decoration-color: #d7aaa5; }
+  .agent-line-added { background: #edf4fd; border-left-color: #8aafe3; color: #315d97; }
+  .agent-line-added .agent-line-no { color: #6e94c8; }
+  .agent-line-added ins { text-decoration: none; }
+  .agent-line-kept { border-left-color: #8aafe3; }
+  .agent-document-foot { margin-top: auto; border-top: 1px solid #f1f2f4; padding: 10px 24px; display: flex; justify-content: space-between; gap: 10px; color: #9399a4; font-size: 10px; }
+  .agent-change-key { display: inline-block; height: 6px; width: 6px; border-radius: 2px; background: #8aafe3; margin-right: 5px; }
+  .agent-observations { border-left: 1px solid var(--hairline); background: #fafbfc; padding: 25px 20px; }
+  .agent-pane-heading h3 { color: #3c4451; font-size: 12px; font-weight: 600; }
+  .agent-pane-heading > p { color: #8a909b; font-size: 11px; margin-top: 3px; }
+  .agent-findings { margin-top: 20px; display: grid; gap: 4px; }
+  .agent-finding { width: 100%; border: 0; border-left: 2px solid transparent; background: none; text-align: left; padding: 12px 12px; border-radius: 0 5px 5px 0; color: #5f6672; transition: background 0.15s ease; }
+  .agent-finding:hover { background: #f0f2f6; }
+  .agent-finding[aria-pressed="true"] { background: #eef3fa; border-left-color: #769ed3; color: #315d97; }
+  .agent-finding-title { display: block; font-size: 11.5px; line-height: 1.5; }
+  .agent-finding-state { display: block; font-size: 9px; color: #929aa6; margin-top: 3px; }
+  .agent-finding[data-state="kept"] .agent-finding-state { color: #5b7b9f; }
+  .agent-insight { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--hairline); }
+  .agent-insight-reason { font-size: 11.5px; line-height: 1.6; color: #707886; }
+  .agent-insight blockquote { padding-left: 12px; margin-top: 18px; border-left: 2px solid #d7e2ef; font-size: 12px; line-height: 1.6; color: #4d5c70; }
+  .agent-evidence-label { display: block; color: #949ba6; font-size: 9px; margin: 7px 0 0 14px; }
+  .agent-insight-actions { display: flex; align-items: center; gap: 17px; margin-top: 22px; }
+  .agent-keep { border: 1px solid #d4dfed; background: #fff; color: #426fa8; border-radius: 6px; padding: 7px 10px; font-size: 10px !important; }
+  .agent-keep:hover { border-color: #92b4e0; background: #f5f9ff; }
+  .agent-keep > span { margin-left: 5px; opacity: 0.5; }
+  .agent-skip { border: 0; background: none; padding: 7px 0; font-size: 10px !important; color: #7d8592; }
+  .agent-skip:hover, #agent-reset:hover { color: #315d97; text-decoration: underline; }
+  .agent-complete { margin-top: 24px; border-top: 1px solid var(--hairline); padding-top: 20px; font-size: 12px; color: #707886; }
+  .agent-demo-footer { display: flex; justify-content: space-between; gap: 20px; align-items: center; border-top: 1px solid var(--hairline); padding: 12px 24px; font-size: 10px; color: #8a909b; }
+  #agent-reset { border: 0; padding: 2px 0; color: #788391; background: none; font-size: 10px; flex: none; }
+  .agent-scope { max-width: 680px; text-align: center; margin: 18px auto 0; color: #8a909b; font-size: 11px; line-height: 1.7; }
+  .agent-no-script { padding: 12px 24px; font-size: 12px; }
+  @media (max-width: 760px) {
+    .personalize { padding: 52px 16px 24px; }
+    .agent-demo-workspace { grid-template-columns: minmax(0, 1fr) 250px; }
+    .agent-observations { padding: 24px 14px; }
+    #agent-document-lines { padding-right: 10px; }
+    .agent-line { grid-template-columns: 22px minmax(0, 1fr); gap: 10px; font-size: 10.5px; }
+    .agent-demo-bar { padding: 0 18px; }
+  }
+  @media (max-width: 580px) {
+    .hero { padding-bottom: 150px; }
+    .agent-demo-workspace { grid-template-columns: minmax(0, 1fr); }
+    .agent-demo-bar { height: auto; min-height: 54px; align-items: flex-start; flex-direction: column; gap: 4px; padding: 12px 18px; }
+    .agent-demo-label { font-size: 9px; }
+    .agent-document { padding-top: 22px; }
+    #agent-document-lines { min-height: 0; padding-bottom: 20px; }
+    .agent-line { font-size: 10.5px; min-height: 23px; }
+    .agent-observations { border-left: 0; border-top: 1px solid var(--hairline); padding: 21px 18px 24px; }
+    .agent-findings { margin-top: 14px; }
+    .agent-finding { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; padding: 10px 12px; }
+    .agent-insight { margin-top: 16px; padding-top: 16px; }
+    .agent-insight-actions { margin-top: 17px; }
+    .agent-demo-footer { padding: 12px 18px; align-items: flex-start; }
+    .agent-scope { font-size: 10px; }
+  }
+
 </style>
 </head>
 <body>
@@ -948,14 +1032,73 @@
     Vous construisez déjà en parlant à un outil de code IA — Claude Code, Cursor, Windsurf… SpecDrive est le <b>superviseur</b> assis juste à côté&nbsp;: l’IA fait le travail, et elle ne peut rien déclarer «&nbsp;terminé&nbsp;» sans preuve.
   </p>
   <div class="cta">
-    <span class="btn-halo"><a class="btn btn-white" href="https://github.com/Connected-Mate/specdrive-site/releases/latest/download/SpecDrive-mac.dmg">
+    <span class="btn-halo"><a class="btn btn-white" href="#download">
       <span class="btn-arrow" aria-hidden="true">↓</span>&nbsp; Télécharger pour Mac
-    </a>
+    </a></span>
   </div>
   <div class="hint">Fonctionne avec l’outil IA que vous utilisez déjà · Tout reste sur votre Mac · Gratuit et open source</div>
+  <a class="hero-feature-link" href="#personalize">Découvrir un agent plus personnel <span aria-hidden="true">↗</span></a>
 </header>
 
 <div class="sheet">
+<section class="personalize" id="personalize" aria-labelledby="personalize-title">
+  <div class="wrap personalize-intro">
+    <div class="label reveal">Aperçu de la prochaine version · Agent Studio</div>
+    <h2 class="reveal title" id="personalize-title">Arrêtez de vous répéter.<br /><em>Faites-en une instruction.</em></h2>
+    <p class="lede reveal">Copiez un prompt. Votre agent repère vos remarques récurrentes dans vos échanges locaux et propose des modifications à <code>CLAUDE.md</code> ou <code>AGENTS.md</code>. Vous gardez ce qui vous convient.</p>
+  </div>
+  <div class="agent-demo reveal" id="agent-demo" data-pending="À examiner" data-kept="Conservé" data-skipped="Ignoré" data-selected="Modification proposée" data-complete="Relecture terminée" data-complete-note="Vos choix apparaissent dans le fichier d’exemple. Rien n’a été enregistré sur votre appareil." data-reset-note="Exemple réinitialisé. Choisissez une observation pour voir sa proposition." data-keep-note="Modification conservée dans cet exemple." data-skip-note="Proposition ignorée. Le texte original est conservé.">
+    <div class="agent-demo-bar">
+      <span class="agent-demo-file"><svg width="15" height="17" viewBox="0 0 15 17" fill="none" aria-hidden="true"><path d="M3 1h6l4 4v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z" stroke="currentColor"/><path d="M9 1v4h4M5 9h5M5 12h5" stroke="currentColor"/></svg> CLAUDE.md</span>
+      <span class="agent-demo-label">Exemple interactif · conversations fictives</span>
+    </div>
+    <div class="agent-demo-workspace">
+      <div class="agent-document" role="region" aria-label="Exemple de fichier d’instructions avec modifications proposées" tabindex="0">
+        <div id="agent-document-lines">
+          <div class="agent-line" data-line="title"><span class="agent-line-no" aria-hidden="true">1</span><span class="agent-line-text agent-heading"># Travailler avec moi</span></div>
+          <div class="agent-line" data-line="blank1"><span class="agent-line-no" aria-hidden="true">2</span><span class="agent-line-text"> </span></div>
+          <div class="agent-line" data-line="collaboration"><span class="agent-line-no" aria-hidden="true">3</span><span class="agent-line-text agent-heading">## Collaboration</span></div>
+          <div class="agent-line" data-line="focus"><span class="agent-line-no" aria-hidden="true">4</span><span class="agent-line-text">Faites des modifications ciblées et expliquez le résultat.</span></div>
+          <div class="agent-line" data-line="autonomy"><span class="agent-line-no" aria-hidden="true">5</span><span class="agent-line-text">Demandez avant chaque étape suivante.</span></div>
+          <div class="agent-line" data-line="blank2"><span class="agent-line-no" aria-hidden="true">6</span><span class="agent-line-text"> </span></div>
+          <div class="agent-line" data-line="verification"><span class="agent-line-no" aria-hidden="true">7</span><span class="agent-line-text agent-heading">## Vérification</span></div>
+          <div class="agent-line" data-line="testing"><span class="agent-line-no" aria-hidden="true">8</span><span class="agent-line-text">Vérifiez que le code compile.</span></div>
+          <div class="agent-line" data-line="blank3"><span class="agent-line-no" aria-hidden="true">9</span><span class="agent-line-text"> </span></div>
+          <div class="agent-line" data-line="communication"><span class="agent-line-no" aria-hidden="true">10</span><span class="agent-line-text agent-heading">## Communication</span></div>
+          <div class="agent-line" data-line="language"><span class="agent-line-no" aria-hidden="true">11</span><span class="agent-line-text">Utilisez un langage clair et direct.</span></div>
+          <div class="agent-line" data-line="blank4"><span class="agent-line-no" aria-hidden="true">12</span><span class="agent-line-text"> </span></div>
+          <div class="agent-line" data-line="context"><span class="agent-line-no" aria-hidden="true">13</span><span class="agent-line-text agent-heading">## Contexte du projet</span></div>
+          <div class="agent-line" data-line="conventions"><span class="agent-line-no" aria-hidden="true">14</span><span class="agent-line-text">Respectez le design et les conventions du projet.</span></div>
+          <div class="agent-line" data-line="handoff"><span class="agent-line-no" aria-hidden="true">15</span><span class="agent-line-text">Terminez par un bref compte rendu du travail.</span></div>
+        </div>
+        <div class="agent-document-foot"><span><span class="agent-change-key" aria-hidden="true"></span> <span id="agent-document-caption">Modification proposée</span></span><span>Markdown</span></div>
+      </div>
+      <aside class="agent-observations" aria-labelledby="agent-observations-title">
+        <div class="agent-pane-heading"><h3 id="agent-observations-title">Ce qui revient souvent</h3><p>Choisissez une observation.</p></div>
+        <div class="agent-findings" role="group" aria-label="Exemples d’observations">
+          <button class="agent-finding" type="button" data-finding="testing" aria-pressed="true"><span class="agent-finding-title">« Vous avez vraiment testé ? »</span><span class="agent-finding-state">À examiner</span></button>
+          <button class="agent-finding" type="button" data-finding="autonomy" aria-pressed="false"><span class="agent-finding-title">« Vous pouvez continuer. »</span><span class="agent-finding-state">À examiner</span></button>
+          <button class="agent-finding" type="button" data-finding="language" aria-pressed="false"><span class="agent-finding-title">« En français, s’il vous plaît. »</span><span class="agent-finding-state">À examiner</span></button>
+        </div>
+        <div class="agent-insight" id="agent-insight">
+          <p class="agent-insight-reason" id="agent-insight-reason">Compiler ne suffit pas. Prévoyez un essai du parcours modifié.</p>
+          <blockquote id="agent-insight-quote">« Vous pouvez aussi vérifier le formulaire dans le navigateur ? »</blockquote>
+          <span class="agent-evidence-label">Extrait d’une conversation fictive</span>
+          <div class="agent-insight-actions" id="agent-insight-actions"><button type="button" class="agent-keep" id="agent-keep">Garder ce changement <span aria-hidden="true">↵</span></button><button type="button" class="agent-skip" id="agent-skip">Ignorer</button></div>
+        </div>
+        <p class="agent-complete" id="agent-complete" hidden></p>
+      </aside>
+    </div>
+    <div class="agent-demo-footer"><span id="agent-demo-notice" role="status" aria-live="polite">Essayez une proposition. Cette démo ne modifie aucun fichier.</span><button type="button" id="agent-reset">Réinitialiser</button></div>
+    <template data-insight="testing"><p data-reason>Compiler ne suffit pas. Prévoyez un essai du parcours modifié.</p><p data-quote>« Vous pouvez aussi vérifier le formulaire dans le navigateur ? »</p><p data-after>Testez le parcours modifié dans le navigateur.</p><p data-after>Décrivez ce que vous avez testé et le résultat.</p></template>
+    <template data-insight="autonomy"><p data-reason>Les demandes de confirmation répétées interrompent un travail déjà convenu.</p><p data-quote>« Oui, continuez avec le reste du plan. »</p><p data-after>Poursuivez le travail convenu jusqu’au bout.</p><p data-after>Demandez lorsqu’une décision nécessite mon avis.</p></template>
+    <template data-insight="language"><p data-reason>Une préférence de langue récurrente mérite sa place dans les instructions.</p><p data-quote>« Vous pouvez répondre en français désormais ? »</p><p data-after>Répondez en français, avec des explications concises et concrètes.</p></template>
+    <noscript><p class="agent-no-script">Activez JavaScript pour essayer les propositions de cette démo.</p></noscript>
+  </div>
+  <p class="agent-scope">Agent Studio est un aperçu de la prochaine version et n’est pas inclus dans le téléchargement actuel.</p>
+  <p class="agent-scope">Historiques locaux de Claude Code et Codex, dans une limite définie. Les échanges uniquement dans le cloud sont exclus. L’agent de votre choix analyse les extraits.</p>
+</section>
+
 <div class="shot-wrap">
   <div class="shot-frame">
     <img src="../assets/hero.png" alt="Le tableau SpecDrive&nbsp;: des spécifications écrites en direct par une IA, un verdict de contre-expertise, les phases du projet et la consigne à copier pour l’étape suivante" width="2562" height="1722" />
@@ -1239,7 +1382,7 @@
   </div>
 </section>
 
-<section class="download">
+<section class="download" id="download">
   <div class="wrap">
     <div class="label reveal">L’obtenir</div>
     <h2 class="reveal title">Télécharger SpecDrive</h2>
@@ -1248,7 +1391,7 @@
       <span class="btn-halo"><a class="btn btn-blue" href="https://github.com/Connected-Mate/specdrive-site/releases/latest/download/SpecDrive-mac.dmg">
         <span class="btn-arrow" aria-hidden="true">↓</span>&nbsp; Télécharger SpecDrive pour Mac
       </a></span>
-      <div class="dl-meta">Version 0.1.5 · macOS 13+ · Mac à puce Apple (M1 et plus récents) · Gratuit</div>
+      <div class="dl-meta">Version 0.1.6 · macOS 13+ · Mac Intel et à puce Apple · Gratuit</div>
     </div>
   </div>
 </section>
@@ -1406,5 +1549,6 @@
   })();
 </script>
 
+<script src="../assets/agent-demo.js" defer></script>
 </body>
 </html>

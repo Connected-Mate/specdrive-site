@@ -107,6 +107,60 @@ t(
   'Un vrai projet, rempli en direct par Claude Code — rien sur cette image n’a été tapé par un humain.'
 );
 
+/* --------------------------------------------------------- Agent Studio --- */
+
+t('Preview a more personal agent', 'Découvrir un agent plus personnel');
+t('Preview of what’s next · Agent Studio', 'Aperçu de la prochaine version · Agent Studio');
+t('Stop repeating yourself.<br /><em>Make it part of the instructions.</em>', 'Arrêtez de vous répéter.<br /><em>Faites-en une instruction.</em>');
+t('Copy one prompt. Your agent finds recurring feedback in your local chats and suggests changes to <code>CLAUDE.md</code> or <code>AGENTS.md</code>. You decide what stays.', 'Copiez un prompt. Votre agent repère vos remarques récurrentes dans vos échanges locaux et propose des modifications à <code>CLAUDE.md</code> ou <code>AGENTS.md</code>. Vous gardez ce qui vous convient.');
+t('Interactive example · fictional conversations', 'Exemple interactif · conversations fictives');
+t('Example instruction file with inline suggestions', 'Exemple de fichier d’instructions avec modifications proposées');
+t('Your choices are reflected in the example file. Nothing was saved to your device.', 'Vos choix apparaissent dans le fichier d’exemple. Rien n’a été enregistré sur votre appareil.');
+t('Example reset. Select an observation to explore its suggestion.', 'Exemple réinitialisé. Choisissez une observation pour voir sa proposition.');
+t('Suggestion kept in this example.', 'Modification conservée dans cet exemple.');
+t('Suggestion skipped. The original text is preserved.', 'Proposition ignorée. Le texte original est conservé.');
+t('Review complete', 'Relecture terminée');
+t('Proposed change', 'Modification proposée');
+t('Suggested', 'À examiner');
+t('Kept', 'Conservé');
+t('Skipped', 'Ignoré');
+t('# Working with me', '# Travailler avec moi');
+t('## Collaboration', '## Collaboration');
+t('Keep changes focused and explain the result.', 'Faites des modifications ciblées et expliquez le résultat.');
+t('Ask before each next step.', 'Demandez avant chaque étape suivante.');
+t('## Verification', '## Vérification');
+t('Check that the code builds.', 'Vérifiez que le code compile.');
+t('## Communication', '## Communication');
+t('Use clear, direct language.', 'Utilisez un langage clair et direct.');
+t('## Project context', '## Contexte du projet');
+t('Respect the existing design and conventions.', 'Respectez le design et les conventions du projet.');
+t('Leave a short handoff when work is complete.', 'Terminez par un bref compte rendu du travail.');
+t('What keeps coming up', 'Ce qui revient souvent');
+t('Select an observation.', 'Choisissez une observation.');
+t('Example observations', 'Exemples d’observations');
+t('“Did you actually test it?”', '« Vous avez vraiment testé ? »');
+t('“You can keep going.”', '« Vous pouvez continuer. »');
+t('“In French, please.”', '« En français, s’il vous plaît. »');
+t('A build check is not enough. Make trying the changed flow part of the work.', 'Compiler ne suffit pas. Prévoyez un essai du parcours modifié.');
+t('“Can you check the form in the browser, too?”', '« Vous pouvez aussi vérifier le formulaire dans le navigateur ? »');
+t('From a fictional conversation', 'Extrait d’une conversation fictive');
+t('Keep this change', 'Garder ce changement');
+t('>Skip</button>', '>Ignorer</button>');
+t('Try a suggestion. This demo does not edit any files.', 'Essayez une proposition. Cette démo ne modifie aucun fichier.');
+t('Reset example', 'Réinitialiser');
+t('Test the changed flow in the browser.', 'Testez le parcours modifié dans le navigateur.');
+t('Report what you checked and what happened.', 'Décrivez ce que vous avez testé et le résultat.');
+t('Repeated permission checks interrupt the work you already agreed on.', 'Les demandes de confirmation répétées interrompent un travail déjà convenu.');
+t('“Yes, go ahead with the rest of the plan.”', '« Oui, continuez avec le reste du plan. »');
+t('Continue through the agreed work.', 'Poursuivez le travail convenu jusqu’au bout.');
+t('Ask when a decision needs my input.', 'Demandez lorsqu’une décision nécessite mon avis.');
+t('A recurring language preference belongs in the instructions.', 'Une préférence de langue récurrente mérite sa place dans les instructions.');
+t('“Can you answer in French from now on?”', '« Vous pouvez répondre en français désormais ? »');
+t('Answer in French, with concise, concrete explanations.', 'Répondez en français, avec des explications concises et concrètes.');
+t('Enable JavaScript to try the illustrative suggestions.', 'Activez JavaScript pour essayer les propositions de cette démo.');
+t('Local Claude Code and Codex histories, within a defined limit. Cloud-only chats are not included. Your chosen agent analyzes the excerpts.', 'Historiques locaux de Claude Code et Codex, dans une limite définie. Les échanges uniquement dans le cloud sont exclus. L’agent de votre choix analyse les extraits.');
+t('Agent Studio is a preview of the next version and is not included in the current download.', 'Agent Studio est un aperçu de la prochaine version et n’est pas inclus dans le téléchargement actuel.');
+
 /* ------------------------------------------------- why an MCP, not a skill */
 
 t('<div class="label reveal">Why an MCP, not a skill</div>', '<div class="label reveal">Pourquoi un MCP, et pas une consigne</div>');
@@ -420,8 +474,8 @@ t(
 );
 t('<span class="btn-arrow" aria-hidden="true">↓</span>&nbsp; Download SpecDrive for Mac', '<span class="btn-arrow" aria-hidden="true">↓</span>&nbsp; Télécharger SpecDrive pour Mac');
 t(
-  'Version 0.1.5 · macOS 13+ · Macs with Apple chips (M1 and newer) · Free',
-  'Version 0.1.5 · macOS 13+ · Mac à puce Apple (M1 et plus récents) · Gratuit'
+  'Version 0.1.6 · macOS 13+ · Intel and Apple silicon Macs · Free',
+  'Version 0.1.6 · macOS 13+ · Mac Intel et à puce Apple · Gratuit'
 );
 
 /* ----------------------------------------------------------------- oss --- */
